@@ -423,7 +423,7 @@ $agent_photo = $current_user['PERSONAL_PHOTO'];
     document.addEventListener("DOMContentLoaded", async function() {
       const id = new URLSearchParams(window.location.search).get("id");
       const url =
-        "https://crm.livrichy.com/rest/1509/hb3qi4ma9t11q1c4/crm.item.get?entityTypeId=1036&id=" +
+        "https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.get?entityTypeId=1036&id=" +
         id;
       const response = await fetch(url);
 
