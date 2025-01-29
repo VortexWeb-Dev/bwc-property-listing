@@ -143,13 +143,16 @@
                             <ul class="dropdown-menu shadow absolute z-10" style="max-height: 50vh; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #6B7280 #f9fafb; font-size:medium;">
                                 <li><a class="dropdown-item" href="?page=edit-property&id=${property.id}"><i class="fa-solid fa-edit me-2"></i>Edit</a></li>
                                 <li><a class="dropdown-item" href="?page=view-property&id=${property.id}"><i class="fa-solid fa-eye me-2"></i>View Details</a></li>
-                                
                                 <li><button class="dropdown-item" onclick="handleAction('duplicate', ${property.id})"><i class="fa-solid fa-copy me-2"></i>Duplicate Listing</button></li>
                                 <li>
                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#referenceModal" data-property-id="${property.id}" data-reference="${property.ufCrm5ReferenceNumber}">
                                         <i class="fa-solid fa-sync me-2"></i>Refresh Listing
                                     </a>
                                 </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=logged&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Logged-In Agent</a></li>
+                                <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=agent&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Listing Agent</a></li>
+                                <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=owner&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Listing Owner</a></li>
                                 ${isAdmin ? `
                                 <li><hr class="dropdown-divider"></li>
                                 <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id})"><i class="fa-solid fa-bullhorn me-2"></i>Publish to all</button></li>

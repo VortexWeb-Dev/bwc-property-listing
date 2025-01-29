@@ -164,7 +164,7 @@
         if (agent) {
             fields["ufCrm5AgentId"] = agent.ufCrm7AgentId;
             fields["ufCrm5AgentName"] = agent.ufCrm7AgentName;
-            fields["ufCrm5AgentEmail"] = agent.ufCrm7AgentName;
+            fields["ufCrm5AgentEmail"] = agent.ufCrm7AgentEmail;
             fields["ufCrm5AgentPhone"] = agent.ufCrm7AgentMobile;
             fields["ufCrm5AgentPhoto"] = agent.ufCrm7AgentPhoto;
             fields["ufCrm5AgentLicense"] = agent.ufCrm7AgentLicense;
