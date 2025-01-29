@@ -54,7 +54,7 @@ if ($type === 'agent') {
   $agentEmail = $owner["EMAIL"] ?? "owner@example.com";
   $agentPhone = $owner["PERSONAL_MOBILE"] ?? "+971 4 357 5939";
 } else {
-  $currentUserResponse = CRest::call('user.current');
+  $currentUserResponse = CRestCurrent::call('user.current');
   $user = $currentUserResponse['result'];
   $agentName = trim($user['NAME'] . ' ' . $user['LAST_NAME']);
   $agentEmail = $user['EMAIL'];
