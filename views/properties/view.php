@@ -40,12 +40,22 @@
                 </ul>
             </div>
         </div>
-    </div>
 
-    <div class="flex-1 bg-white shadow-md rounded-lg p-6">
-        <div id="property-images" class="grid grid-cols-4 gap-4 overflow-y-auto">
+        <div class="flex-1 bg-white shadow-md rounded-lg p-6">
+            <h3 class="font-semibold text-gray-800 mb-4">Images</h3>
+            <div id="property-images" class="grid grid-cols-4 gap-4 overflow-y-auto">
 
+            </div>
         </div>
+
+        <div class="flex justify-between gap-6 mt-6">
+            <div class="flex-1">
+                <h3 class="font-semibold text-gray-700">Comments</h3>
+                <ul class="mt-2 space-y-2 text-md text-gray-600" id="property-comments"></ul>
+                </ul>
+            </div>
+        </div>
+
     </div>
 
 
@@ -109,6 +119,50 @@
                 imageElement.alt = 'Property Image';
                 imageElement.classList.add('w-full', 'h-64', 'object-cover');
                 imageContainer.appendChild(imageElement);
+            });
+
+            function extractNoteAndTime(noteString) {
+                const match = noteString.match(/^(.*)\s-\s\[(.*)\]$/);
+                if (match) {
+                    return {
+                        text: match[1].trim(),
+                        timestamp: match[2].trim()
+                    };
+                } else {
+                    console.error("Invalid note format:", noteString);
+                    return {
+                        text: "",
+                        timestamp: ""
+                    };
+                }
+            }
+
+            const comments = property.ufCrm5Notes || [];
+            const commentsContainer = document.getElementById("property-comments");
+
+            if (comments.length === 0) {
+                const commentElement = document.createElement("li");
+                commentElement.classList.add("p-3", "border", "border-gray-300", "rounded-lg", "shadow-sm", "mb-2", "bg-gray-50");
+                commentElement.innerHTML = `
+        <div class="text-gray-700 font-medium">No comments available.</div>
+    `;
+            }
+
+            comments.forEach(comment => {
+                const {
+                    text,
+                    timestamp
+                } = extractNoteAndTime(comment);
+
+                const commentElement = document.createElement("li");
+                commentElement.classList.add("p-3", "border", "border-gray-300", "rounded-lg", "shadow-sm", "mb-2", "bg-gray-50");
+
+                commentElement.innerHTML = `
+        <div class="text-gray-700 font-medium">${text}</div>
+        <div class="text-xs text-gray-500 text-right">${timestamp}</div>
+    `;
+
+                commentsContainer.appendChild(commentElement);
             });
         } else {
             console.error('Invalid property data:', data);

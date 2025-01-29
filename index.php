@@ -18,6 +18,7 @@ $pages = [
     'edit-property' => 'views/properties/edit.php',
     'view-property' => 'views/properties/view.php',
 
+    'pocket' => 'views/pocket/index.php',
     'agents' => 'views/agents/index.php',
     'developers' => 'views/developers/index.php',
     'pf-locations' => 'views/pf-locations/index.php',

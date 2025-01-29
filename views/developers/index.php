@@ -44,7 +44,7 @@
     async function fetchDevelopers(page = 1) {
         const baseUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r';
         const entityTypeId = 1052;
-        const apiUrl = `${baseUrl}/crm.item.list?entityTypeId=${entityTypeId}&order[id]=desc&select[0]=id&select[1]=ufCrm5DeveloperName&start=${(page - 1) * pageSize}`;
+        const apiUrl = `${baseUrl}/crm.item.list?entityTypeId=${entityTypeId}&order[id]=desc&select[0]=id&select[1]=ufCrm13DeveloperName&start=${(page - 1) * pageSize}`;
 
         const loading = document.getElementById('loading');
         const developerTable = document.getElementById('developer-table');
@@ -83,7 +83,7 @@
                     (developer) => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${developer.id}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${developer.ufCrm5DeveloperName || 'N/A'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${developer.ufCrm13DeveloperName || 'N/A'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <button onClick="deleteDeveloper(${developer.id})" type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">Delete</button>
                     </td>

@@ -277,13 +277,13 @@
 
         const fetchDevelopers = async () => {
             try {
-                const response = await fetch(`${baseUrl}/crm.item.list?entityTypeId=1052&select[0]=id&select[1]=ufCrm5DeveloperName&order[ufCrm5DeveloperName]=asc`);
+                const response = await fetch(`${baseUrl}/crm.item.list?entityTypeId=1052&select[0]=id&select[1]=ufCrm13DeveloperName&order[ufCrm13DeveloperName]=asc`);
                 const data = await response.json();
                 const totalDevelopers = data.total;
                 const developers = [];
 
                 for (let i = 0; i < Math.ceil(totalDevelopers / 50); i++) {
-                    const paginatedResponse = await fetch(`${baseUrl}/crm.item.list?entityTypeId=1052&select[0]=id&select[1]=ufCrm5DeveloperName&order[ufCrm5DeveloperName]=asc&start=${i * 50}`);
+                    const paginatedResponse = await fetch(`${baseUrl}/crm.item.list?entityTypeId=1052&select[0]=id&select[1]=ufCrm13DeveloperName&order[ufCrm13DeveloperName]=asc&start=${i * 50}`);
                     const paginatedData = await paginatedResponse.json();
                     developers.push(...paginatedData.result.items);
                 }
@@ -338,7 +338,7 @@
 
 
                 createSelectOptions(agents, listingAgentSelect, 'ufCrm7AgentName', 'ufCrm7AgentName');
-                createSelectOptions(developers, developerSelect, 'ufCrm5DeveloperName', 'ufCrm5DeveloperName');
+                createSelectOptions(developers, developerSelect, 'ufCrm13DeveloperName', 'ufCrm13DeveloperName');
                 createSelectOptions(owners, listingOwnerSelect, 'NAME', 'NAME');
             } catch (error) {
                 console.error('Error fetching listing data:', error);

@@ -186,7 +186,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const developerSelect = document.getElementById('developer');
 
-        const url = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1052&select[0]=ID&select[1]=ufCrm5DeveloperName&order[ufCrm5DeveloperName]=asc';
+        const url = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1052&select[0]=ID&select[1]=ufCrm13DeveloperName&order[ufCrm13DeveloperName]=asc';
 
         const fetchAndDisplayOptions = async () => {
             try {
@@ -206,8 +206,8 @@
 
                 developers.forEach(developer => {
                     const option = document.createElement('option');
-                    option.value = developer.ufCrm5DeveloperName;
-                    option.textContent = developer.ufCrm5DeveloperName;
+                    option.value = developer.ufCrm13DeveloperName;
+                    option.textContent = developer.ufCrm13DeveloperName;
                     developerSelect.appendChild(option);
                 });
 

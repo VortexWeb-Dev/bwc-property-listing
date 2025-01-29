@@ -18,7 +18,8 @@ if (isset($_GET['page'])) {
                 <i class="fa fa-gear"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item <?= $page == 'properties' ? 'active' : '' ?>" href="?page=properties"><i class="fa fa-home me-2"></i> properties</a></li>
+                <li><a class="dropdown-item <?= $page == 'properties' ? 'active' : '' ?>" href="?page=properties"><i class="fa fa-home me-2"></i> Properties</a></li>
+                <li><a class="dropdown-item <?= $page == 'pocket' ? 'active' : '' ?>" href="?page=pocket"><i class="fa fa-home me-2"></i> Pocket Listings</a></li>
                 <li><a class="dropdown-item <?= $page == 'agents' ? 'active' : '' ?>" href="?page=agents"><i class="fa fa-user-group me-2"></i> Agents</a></li>
                 <li><a class="dropdown-item <?= $page == 'pf-locations' ? 'active' : '' ?>" href="?page=pf-locations"><i class="fa fa-map me-2"></i> PF Locations</a></li>
                 <li><a class="dropdown-item <?= $page == 'bayut-locations' ? 'active' : '' ?>" href="?page=bayut-locations"><i class="fa fa-map-pin me-2"></i> Bayut Locations</a></li>

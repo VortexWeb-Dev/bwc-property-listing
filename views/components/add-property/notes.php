@@ -1,9 +1,9 @@
 <div class="bg-white shadow-md rounded-lg p-6">
-    <h2 class="text-2xl font-semibold mb-6">Notes</h2>
+    <h2 class="text-2xl font-semibold mb-6">Comments</h2>
 
     <div class="my-4 flex justify-between gap-6">
         <div class="w-full md:w-1/2">
-            <label for="note" class="block text-sm font-medium mb-2">Add a Note</label>
+            <label for="note" class="block text-sm font-medium mb-2">Add a Comment</label>
             <textarea id="note" name="note" maxlength="150"
                 oninput="updateCharCount('noteCount', this.value.length, 150);"
                 class="py-3 px-4 block w-full border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
@@ -17,7 +17,7 @@
         </div>
 
         <div class="w-full md:w-1/2">
-            <label class="block text-sm font-medium mb-2">Added Notes</label>
+            <label class="block text-sm font-medium mb-2">Added Comments</label>
             <ul id="notesList" class="list-none p-0">
 
             </ul>
@@ -39,7 +39,7 @@
         li.classList.add("text-gray-700", "p-2", "flex", "justify-between", "items-center", "mb-2", "bg-gray-100", "rounded-md");
 
         li.innerHTML = `
-        ${noteText} 
+        ${noteText} - [${new Date().toLocaleString('en-UK', {timeZone: 'Asia/Dubai'})}] 
         <button class="text-red-500 hover:text-red-700" onclick="removeNote(this)">×</button>
     `;
 
