@@ -66,14 +66,15 @@ $options->set('defaultFont', 'Helvetica');
 $options->set('isHtml5ParserEnabled', true);
 $options->set('isPhpEnabled', true);
 $options->set('isBase64Enabled', true);
+$options->set('isRemoteEnabled', true);
 
 $pdf = new Dompdf($options);
 $pdf->setPaper('A4', 'portrait');
 
 $html = "
-    <!-- <div style='text-align:center;'>
+    <div style='text-align:center;'>
         <img src='{$mainImage}' style='width:100%; height:auto;' />
-    </div> -->
+    </div>
     <h2>{$title}</h2>
     <p><strong>Location:</strong> {$location}</p>
     <p><strong>Price:</strong> {$price}</p>
@@ -82,31 +83,31 @@ $html = "
 if (count($images) > 1) {
   $html .= "
     <div style='display:flex; justify-content:space-between;'>
-        <!-- <img src='{$images[1]}' style='width:48%; height:auto;' /> -->
-        <!-- <img src='{$images[2]}' style='width:48%; height:auto;' /> -->
+        <img src='{$images[1]}' style='width:48%; height:auto;' />
+        <img src='{$images[2]}' style='width:48%; height:auto;' />
     </div>";
 }
 
-$html .= "<hr><pagebreak />";
+$html .= "<hr><div style='page-break-before: always;'></div>";
 
 $html .= "<h2>Property Features</h2>
     <p><strong>Size:</strong> {$size} sqft  <strong>Bedrooms:</strong> {$bedrooms}  <strong>Bathrooms:</strong> {$bathrooms}  <strong>Type:</strong> {$propertyType} <strong>Availability:</strong> {$availability}</p>
     <p><strong>Description:</strong><br>{$description}</p>";
 
-// $html .= "<h3>Image Gallery</h3>";
-// $html .= "<div style='display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;'>";
+$html .= "<h3>Image Gallery</h3>";
+$html .= "<div style='display: flex; flex-wrap: wrap; gap: 10px;'>";
 
-// foreach ($images as $index => $image) {
-//   if ($index > 0) {
-//     $html .= "<img src='{$image}' style='width:100%; height:auto;'/>";
-//   }
-// }
+foreach ($images as $index => $image) {
+  if ($index > 0) {
+    $html .= "<img src='{$image}' style='width:100%; height:auto;'/>";
+  }
+}
 
-// $html .= "</div>";
+$html .= "</div>";
 
-if($property['ufCrm5Amenities'] && count($property['ufCrm5Amenities']) > 0) {
+if ($property['ufCrm5Amenities'] && count($property['ufCrm5Amenities']) > 0) {
   $html .= "<h3>Private Amenities</h3><div>";
-  
+
   $amenities = $property['ufCrm5Amenities'] ?? [];
   foreach ($amenities as $amenity) {
     $html .= "<span style='padding: 5px 10px; background-color: #f1f1f1; border-radius: 20px; margin: 5px;'>{$amenity}</span>";
@@ -114,11 +115,11 @@ if($property['ufCrm5Amenities'] && count($property['ufCrm5Amenities']) > 0) {
 }
 
 $html .= "</div>";
+$html .= "<hr><div style='page-break-before: always;'></div>";
 
 $html .= "
     <h3>For viewing and more information, please contact our property specialist:</h3>
     <div style='border: 1px solid #ddd; padding: 20px; text-align:center;'>
-        <img src='https://via.placeholder.com/100' alt='Agent Image' style='border-radius: 50%;'>
         <p><strong>{$agentName}</strong></p>
         <p>{$agentEmail}</p>
         <p>{$agentPhone}</p>
