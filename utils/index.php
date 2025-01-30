@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../crest/crest.php");
+require_once(__DIR__ . "/../crest/crestcurrent.php");
 
 
 function buildApiUrl($baseUrl, $entityTypeId, $fields, $start = 0)
@@ -222,28 +223,43 @@ function formatField($field, $value, $type = 'string')
 
 function formatPriceOnApplication($property)
 {
-    $priceOnApplication = ($property['ufCrm5HidePrice'] === 'Y') ? 'Yes' : 'Yes';
+    $priceOnApplication = ($property['ufCrm5HidePrice'] === 'Y') ? 'Yes' : 'No';
     return formatField('price_on_application', $priceOnApplication);
 }
 
 function formatRentalPrice($property)
 {
-    if (empty($property['ufCrm5RentalPeriod'])) {
-        return formatField('price', $property['ufCrm5Price']);
+    if (empty($property['ufCrm5Price'])) {
+        return '<price></price>';
     }
 
-    switch ($property['ufCrm5RentalPeriod']) {
-        case 'Y':
-            return formatField('price', $property['ufCrm5Price'], 'yearly');
-        case 'M':
-            return formatField('price', $property['ufCrm5Price'], 'monthly');
-        case 'W':
-            return formatField('price', $property['ufCrm5Price'], 'weekly');
-        case 'D':
-            return formatField('price', $property['ufCrm5Price'], 'daily');
-        default:
-            return formatField('price', $property['ufCrm5Price']);
+    $price = (int) $property['ufCrm5Price'];
+    $rentalPeriod = $property['ufCrm5RentalPeriod'] ?? '';
+
+    $minPrices = [
+        'Y' => 10000, // Yearly rent
+        'M' => 1000,  // Monthly rent
+        'W' => 1000,  // Weekly rent
+        'D' => 100,   // Daily rent
+    ];
+
+    if (isset($minPrices[$rentalPeriod]) && $price < $minPrices[$rentalPeriod]) {
+        return '<price></price>'; // Leave empty tag if below minimum
     }
+
+    // If it's a sales price, return directly
+    if (!$rentalPeriod) {
+        return "<price>{$price}</price>";
+    }
+
+    // Construct rental price XML dynamically (avoid empty tags)
+    $rentalPrices = [];
+    if ($rentalPeriod == 'Y') $rentalPrices[] = "<yearly>{$price}</yearly>";
+    if ($rentalPeriod == 'M') $rentalPrices[] = "<monthly>{$price}</monthly>";
+    if ($rentalPeriod == 'W') $rentalPrices[] = "<weekly>{$price}</weekly>";
+    if ($rentalPeriod == 'D') $rentalPrices[] = "<daily>{$price}</daily>";
+
+    return "<price>\n" . implode("\n", $rentalPrices) . "\n</price>";
 }
 
 function formatBedroom($property)
@@ -304,14 +320,11 @@ function formatPhotos($photos)
 
 function formatGeopoints($property)
 {
-    $geopoints = "";
-
     if (!empty($property['ufCrm5Latitude']) && !empty($property['ufCrm5Longitude'])) {
-        $geopoints = ($property['ufCrm5Latitude'] . ',' . $property['ufCrm5Longitude'] ?? '');
+        $geopoints = $property['ufCrm5Latitude'] . ',' . $property['ufCrm5Longitude'];
     } else {
-        $geopoints = ($property['ufCrm5Geopoints'] ?? '');
+        $geopoints = $property['ufCrm5Geopoints'] ?? '';
     }
-
     return formatField('geopoints', $geopoints);
 }
 
@@ -516,17 +529,19 @@ function uploadFile($file, $isDocument = false)
 
 function fetchCurrentUser()
 {
-    $response = CRest::call("user.current");
+    $response = CRestCurrent::call("user.current");
     return $response['result'];
 }
 
 function isAdmin($userId)
 {
+    $response = CRestCurrent::call("user.admin");
+
     $admins = [
         9, // VortexWeb
     ];
 
-    return in_array($userId, $admins);
+    return $response['result'] || in_array($userId, $admins);
 }
 
 

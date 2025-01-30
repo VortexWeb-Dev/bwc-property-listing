@@ -10,6 +10,14 @@
 <script src="assets/js/script.js"></script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+        if (!isAdmin) {
+            document.querySelectorAll(".admin-only").forEach(el => el.style.display = "none");
+        }
+    });
+
     // Toggle Bayut and Dubizzle
     document.getElementById('toggle_bayut_dubizzle') && document.getElementById('toggle_bayut_dubizzle').addEventListener('change', function() {
         const isChecked = this.checked;
