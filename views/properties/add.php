@@ -42,7 +42,7 @@
 </div>
 
 <script>
-    document.getElementById("offering_type").addEventListener("change", function() {
+    document.getElementById("offering_type").addEventListener("change", async function() {
         const offeringType = this.value;
         console.log(offeringType);
 
@@ -53,6 +53,9 @@
             document.getElementById("rental_period").removeAttribute("required");
             document.querySelector('label[for="rental_period"]').innerHTML = 'Rental Period (if rental)';
         }
+
+        const newReference = await getNewReference(offeringType);
+        document.getElementById("reference").value = newReference;
     })
 
     async function addItem(entityTypeId, fields) {
@@ -237,4 +240,9 @@
         // Add to CRM
         addItem(1036, fields, '?page=properties');
     }
+
+    window.addEventListener('load', async () => {
+        const newReference = await getNewReference('RS');
+        document.getElementById("reference").value = newReference;
+    });
 </script>
