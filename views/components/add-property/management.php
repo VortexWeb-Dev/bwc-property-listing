@@ -5,7 +5,7 @@
         <!-- Column 1 -->
         <div class="max-w-sm">
             <label for="reference" class="block text-sm font-medium mb-2">Reference <span class="text-danger">*</span></label>
-            <input type="text" id="reference" name="reference" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none" required readonly>
+            <input type="text" id="reference" name="reference" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none" required>
         </div>
         <!-- Column 2 -->
         <div class="max-w-sm">
