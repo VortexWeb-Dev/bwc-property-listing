@@ -11,7 +11,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const isAdmin = localStorage.getItem('isAdmin') === 'true';
+        const isAdmin = <?php echo json_encode($isAdmin); ?>;
 
         if (!isAdmin) {
             document.querySelectorAll(".admin-only").forEach(el => el.style.display = "none");

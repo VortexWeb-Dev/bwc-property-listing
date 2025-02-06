@@ -39,7 +39,7 @@ if (!array_key_exists($page, $pages)) {
 
 <script>
     // Store isAdmin in localStorage
-    localStorage.setItem('isAdmin', <?php echo json_encode($isAdmin); ?>);
+    // localStorage.setItem('isAdmin', <?php echo json_encode($isAdmin); ?>);
 </script>
 
 <?php

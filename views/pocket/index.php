@@ -57,8 +57,6 @@
     const pageSize = 50;
     let totalPages = 0;
 
-    const isAdmin = localStorage.getItem('isAdmin') === 'true';
-
     async function fetchProperties(page = 1, filters = null) {
         const baseUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r';
         const entityTypeId = 1036;
