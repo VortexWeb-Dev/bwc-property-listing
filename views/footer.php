@@ -1233,19 +1233,21 @@
 
     async function getNewReference(offeringType) {
         const prefix = (offeringType === "RR" || offeringType === "CR") ? "BWC-R-" : "BWC-S-";
-        const url = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1036&order[id]=desc';
+        const url = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1036&order[id]=desc&select[]=ufCrm5ReferenceNumber';
 
         try {
             const response = await fetch(url);
             const data = await response.json();
 
-            if (!data.result.items.length) {
+            const seriesItems = data.result.items.filter(item =>
+                item.ufCrm5ReferenceNumber.startsWith(prefix)
+            );
+
+            if (!seriesItems.length) {
                 return `${prefix}000001`;
             }
 
-            const lastReference = data.result.items[0].ufCrm5ReferenceNumber;
-            // console.log("Last Reference:", lastReference);
-
+            const lastReference = seriesItems[0].ufCrm5ReferenceNumber;
             const regex = new RegExp(`^${prefix}(\\d{6})$`);
             const match = lastReference.match(regex);
 
@@ -1253,7 +1255,6 @@
                 String(parseInt(match[1], 10) + 1).padStart(6, '0') :
                 '000001';
 
-            // console.log("Next Reference:", `${prefix}${nextNumber}`);
             return `${prefix}${nextNumber}`;
         } catch (error) {
             console.error('Error fetching reference:', error);
