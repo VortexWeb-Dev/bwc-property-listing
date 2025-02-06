@@ -1,54 +1,51 @@
 <?php include 'views/components/index-buttons.php'; ?>
 
-<div class="w-4/5 mx-auto mb-8 px-4">
+<div class="w-4/5 mx-auto mb-8 px-4 overflow-hidden">
     <!-- Loading -->
     <?php include_once('views/components/loading.php'); ?>
 
-    <div id="property-table" class="flex flex-col">
-        <div class="-m-1.5 overflow-x-auto">
-            <div class="p-1.5 min-w-full inline-block align-middle">
-                <div class="overflow-hidden">
-                    <table class="min-w-full divide-y divide-gray-200 table-responsive">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="px-4 py-3 text-start">
-                                    <label for="hs-at-with-checkboxes-main" class="flex">
-                                        <input id="select-all" onclick="toggleCheckboxes(this)" type="checkbox" class="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" id="hs-at-with-checkboxes-main">
-                                        <span class="sr-only">Checkbox</span>
-                                    </label>
-                                </th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Actions</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Reference</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase max-w-[200px]">Property Details</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Type</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Size</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Price</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Status</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Listing Agent and Owner</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase min-w-[200px]">Published Portals</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Created On</th>
-                            </tr>
-                        </thead>
-                        <tbody id="property-list" class="divide-y divide-gray-200"></tbody>
-                    </table>
-                </div>
-            </div>
+    <div id="property-table">
+        <div class="table-container">
+            <table class="min-w-full divide-y divide-gray-200 table-responsive">
+                <thead>
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-start">
+                            <label for="hs-at-with-checkboxes-main" class="flex">
+                                <input id="select-all" onclick="toggleCheckboxes(this)" type="checkbox" class="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" id="hs-at-with-checkboxes-main">
+                                <span class="sr-only">Checkbox</span>
+                            </label>
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Reference</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase max-w-[200px]">Property Details</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Type</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Size</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Price</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Status</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Listing Agent and Owner</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase min-w-[200px]">Published Portals</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Created On</th>
+                    </tr>
+                </thead>
+                <tbody id="property-list" class="divide-y divide-gray-200"></tbody>
+            </table>
         </div>
     </div>
-
     <!-- Pagination -->
     <?php include 'views/components/pagination.php'; ?>
+</div>
 
-    <!-- Modals -->
-    <?php include 'views/modals/filter.php'; ?>
-    <?php include 'views/modals/refresh-listing.php'; ?>
-    <?php
-    if ($isAdmin) {
-        include 'views/modals/transfer-to-agent.php';
-        include 'views/modals/transfer-to-owner.php';
-    }
-    ?>
+
+<!-- Modals -->
+<?php include 'views/modals/filter.php'; ?>
+<?php include 'views/modals/refresh-listing.php'; ?>
+<?php
+if ($isAdmin) {
+    include 'views/modals/transfer-to-agent.php';
+    include 'views/modals/transfer-to-owner.php';
+}
+?>
 </div>
 
 

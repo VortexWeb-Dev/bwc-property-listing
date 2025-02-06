@@ -19,6 +19,39 @@
     <!-- <script src="https://unpkg.com/swapy/dist/swapy.min.js"></script> -->
     <script src="./node_modules/swapy/dist/swapy.min.js"></script>
     <link rel="stylesheet" href="assets/css/shuffle.css">
+    <style>
+        #property-table {
+            height: 75vh;
+            /* Or any fixed height you prefer */
+            max-height: 800px;
+            /* Optional: maximum height */
+            position: relative;
+            margin: 20px;
+        }
+
+        /* Table wrapper styles */
+        .table-container {
+            height: 100%;
+            overflow: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+
+        /* Make the header stick to the top */
+        thead tr th {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1;
+        }
+
+        /* Ensure the table takes full width of its container */
+        .table-responsive {
+            min-width: 100%;
+            width: max-content;
+            /* This allows the table to expand beyond viewport width */
+        }
+    </style>
 </head>
 
 <body class="">
