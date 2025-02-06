@@ -1,4 +1,4 @@
-<div class="bg-white shadow-md rounded-lg p-6 hidden">
+<div class="bg-white shadow-md rounded-lg p-6 admin-only">
     <h2 class="text-2xl font-semibold">Property Permit</h2>
     <p class="text-sm text-gray-500 mb-4">Please fill in any of the permit details</p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-4">

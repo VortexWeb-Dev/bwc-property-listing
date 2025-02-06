@@ -543,7 +543,7 @@ function isAdmin($userId)
         1, // Taha Ali
     ];
 
-    return true || $response['result'] || in_array($userId, $admins);
+    return $response['result'] || in_array($userId, $admins);
 }
 
 
