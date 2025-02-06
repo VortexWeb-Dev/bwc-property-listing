@@ -31,14 +31,14 @@
         </div>
 
         <!-- Column 1 -->
-        <div>
+        <div class="hidden">
             <label for="brochure_description_1" class="block text-sm font-medium mb-2">Description for Brochure (1)</label>
             <textarea id="brochure_description_1" name="brochure_description_1" maxlength="200" oninput="updateCharCount('brochureDescription1Count', this.value.length, 200);" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" rows="7"></textarea>
             <small class="text-xs text-gray-500"><span id="brochureDescription1Count">0</span> / 200 characters</small>
         </div>
 
         <!-- Column 1 -->
-        <div>
+        <div class="hidden">
             <label for="brochure_description_2" class="block text-sm font-medium mb-2">Description for Brochure (2)</label>
             <textarea id="brochure_description_2" name="brochure_description_2" maxlength="190" oninput="updateCharCount('brochureDescription2Count', this.value.length, 190);" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" rows="7"></textarea>
             <small class="text-xs text-gray-500"><span id="brochureDescription2Count">0</span> / 190 characters</small>
