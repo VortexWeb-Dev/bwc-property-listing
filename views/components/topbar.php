@@ -10,7 +10,17 @@ if (isset($_GET['page'])) {
 <!-- Topbar -->
 <div class="w-full border-b py-3 px-4 flex justify-between items-center">
     <h1 class="text-2xl font-bold text-gray-800"><a href="?page=properties">Property Listing</a></h1>
-    <div class="text-md">Listings: <span class="ml-2 font-semibold py-1 px-2 bg-blue-600 text-white rounded-lg" id="listingCount">0</span></div>
+    <div class="flex flex-wrap gap-2">
+        <span class="text-xs font-semibold py-1 px-3 bg-blue-600/80 text-white rounded-full" title="Total Listings" id="totalCount">Total: 0</span>
+        <span class="text-xs font-semibold py-1 px-3 bg-green-600/80 text-white rounded-full" title="Published Listings" id="publishedCount">Published: 0</span>
+        <span class="text-xs font-semibold py-1 px-3 bg-yellow-600/80 text-white rounded-full" title="Draft Listings" id="draftCount">Draft: 0</span>
+        <span class="text-xs font-semibold py-1 px-3 bg-gray-600/80 text-white rounded-full" title="Archived Listings" id="archivedCount">Archived: 0</span>
+        <span class="text-xs font-semibold py-1 px-3 bg-purple-600/80 text-white rounded-full" title="PF Enabled" id="pfCount">PF: 0</span>
+        <span class="text-xs font-semibold py-1 px-3 bg-red-600/80 text-white rounded-full" title="Bayut Enabled" id="bayutCount">Bayut: 0</span>
+        <span class="text-xs font-semibold py-1 px-3 bg-pink-600/80 text-white rounded-full" title="Dubizzle Enabled" id="dubizzleCount">Dubizzle: 0</span>
+        <span class="text-xs font-semibold py-1 px-3 bg-teal-600/80 text-white rounded-full" title="Website Enabled" id="websiteCount">Web: 0</span>
+    </div>
+
     <div>
         <!-- Dropdown -->
         <div class="dropdown">
@@ -36,26 +46,71 @@ if (isset($_GET['page'])) {
 </div>
 
 <script>
-    async function getListingCount(page = 1) {
-        const apiUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1036&select[0]=id';
+    async function fetchAllProperties() {
+        let allProperties = [];
+        let start = 0; // Start from 0
+        let hasNextPage = true;
 
-        const listngCount = document.getElementById('listingCount');
+        while (hasNextPage) {
+            const apiUrl = `https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1036&select[]=id&select[]=ufCrm5Status&select[]=ufCrm5PfEnable&select[]=ufCrm5BayutEnable&select[]=ufCrm5DubizzleEnable&select[]=ufCrm5WebsiteEnable&start=${start}`;
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'GET'
-            });
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET'
+                });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Append new items to the list
+                allProperties = allProperties.concat(data.result.items);
+
+                // Update the next start position
+                if (data.next !== undefined) {
+                    start = data.next;
+                } else {
+                    hasNextPage = false; // No more pages
+                }
+            } catch (error) {
+                console.error('Error fetching properties:', error);
+                hasNextPage = false; // Stop on error
             }
-
-            const data = await response.json();
-            listngCount.textContent = data.total || 0;
-        } catch (error) {
-            console.error('Error fetching properties:', error);
         }
+
+        return allProperties;
     }
 
-    getListingCount();
+    // Usage example:
+    fetchAllProperties().then((properties) => {
+        console.log("Total Properties Fetched:", properties.length);
+        console.log(properties);
+        let totalCount = properties.length;
+        let publishedCount = 0;
+        let draftCount = 0;
+        let archivedCount = 0;
+        let pfCount = 0;
+        let bayutCount = 0;
+        let dubizzleCount = 0;
+        let websiteCount = 0;
+        properties.forEach((property) => {
+            if (property.ufCrm5Status === "PUBLISHED") publishedCount++;
+            if (property.ufCrm5Status === "DRAFT") draftCount++;
+            if (property.ufCrm5Status === "ARCHIVED") archivedCount++;
+            if (property.ufCrm5PfEnable === "Y") pfCount++;
+            if (property.ufCrm5BayutEnable === "Y") bayutCount++;
+            if (property.ufCrm5DubizzleEnable === "Y") dubizzleCount++;
+            if (property.ufCrm5WebsiteEnable === "Y") websiteCount++;
+        })
+        document.getElementById('totalCount').textContent = "Total: " + totalCount;
+        document.getElementById('publishedCount').textContent = "Published: " + publishedCount;
+        document.getElementById('draftCount').textContent = "Draft: " + draftCount;
+        document.getElementById('archivedCount').textContent = "Archived: " + archivedCount;
+        document.getElementById('pfCount').textContent = "PF: " + pfCount;
+        document.getElementById('bayutCount').textContent = "Bayut: " + bayutCount;
+        document.getElementById('dubizzleCount').textContent = "Dubizzle: " + dubizzleCount;
+        document.getElementById('websiteCount').textContent = "BWC: " + websiteCount;
+    });
 </script>

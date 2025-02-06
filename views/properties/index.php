@@ -23,7 +23,8 @@
                         <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Price</th>
                         <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Status</th>
                         <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
-                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Listing Agent and Owner</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Listing Agent</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Listing Owner</th>
                         <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase min-w-[200px]">Published Portals</th>
                         <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Created On</th>
                     </tr>
@@ -224,6 +225,8 @@ if ($isAdmin) {
                     </td>
                     <td class="px-3 py-4 whitespace-nowrap text-xs font-medium text-gray-800">
                         <p class="">${property.ufCrm5AgentName || ''}</p> 
+                    </td>
+                    <td class="px-3 py-4 whitespace-nowrap text-xs font-medium text-gray-800">
                         <p class="">${property.ufCrm5ListingOwner || ''}</p> 
                     </td>
                    <td class="px-3 py-4 whitespace-nowrap text-xs font-medium text-gray-800">
