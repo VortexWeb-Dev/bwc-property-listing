@@ -163,7 +163,7 @@
                     }
 
                     addUrl += `&fields[ufCrm5TitleEn]=${encodeURIComponent(property.ufCrm5TitleEn + ' (Duplicate)')}`;
-                    addUrl += `&fields[ufCrm5ReferenceNumber]=${encodeURIComponent(property.ufCrm5ReferenceNumber) + '-duplicate'}`;
+                    addUrl += `&fields[ufCrm5ReferenceNumber]=${await getNewReference(property.ufCrm5OfferingType)}`;
                     addUrl += `&fields[ufCrm5Status]=DRAFT`;
 
                     await fetch(addUrl, {
@@ -349,8 +349,8 @@
                             const getPropertyUrl = `${baseUrl}/crm.item.get?entityTypeId=1036&id=${propertyId}`;
                             const propertyResponse = await fetch(getPropertyUrl);
                             const propertyData = await propertyResponse.json();
-                            console.log('Property data:', propertyData);
-                            if (propertyData.result && propertyData.result.item) {
+
+                            if (propertyData.result && propertyData.result.item && !propertyData.result.item.ufCrm5TitleEn.includes('(Duplicate)')) {
                                 const property = propertyData.result.item;
 
                                 // Delete images from S3
