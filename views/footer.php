@@ -1261,6 +1261,134 @@
             return null;
         }
     }
+
+    function downloadImages(propertyId, event) {
+        // Create and show a toast notification
+        const toastContainer = document.createElement('div');
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.bottom = '1rem';
+        toastContainer.style.right = '1rem';
+        toastContainer.style.zIndex = '1050';
+
+        const toast = document.createElement('div');
+        toast.className = 'toast show';
+        toast.style.minWidth = '300px';
+
+        // Store the clicked element
+        const clickedElement = event.target.closest('a'); // Get the parent <a> tag
+
+
+
+        // Disable the link while downloading
+        clickedElement.style.pointerEvents = 'none';
+
+        toast.innerHTML = `
+        <div class="toast-header">
+            <strong class="me-auto">Downloading Images</strong>
+            <button type="button" class="btn-close" onclick="this.closest('.toast').remove()"></button>
+        </div>
+        <div class="toast-body">
+            <div class="d-flex align-items-center">
+                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                <span>Preparing your download...</span>
+            </div>
+            <div class="text-muted small mt-1">This may take a few moments depending on the number of images.</div>
+        </div>
+    `;
+
+        toastContainer.appendChild(toast);
+        document.body.appendChild(toastContainer);
+
+        // Rest of your existing code, but replace all event.target with clickedElement
+        const loadingElement = document.createElement('span');
+        loadingElement.className = 'ms-2 spinner-border spinner-border-sm';
+        clickedElement.appendChild(loadingElement);
+
+        // Disable the link while downloading
+        clickedElement.style.pointerEvents = 'none';
+
+        fetch(`download-images.php?id=${propertyId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Get the filename from the Content-Disposition header if available
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = `property_images_${propertyId}.zip`;
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+                    if (filenameMatch) {
+                        filename = filenameMatch[1];
+                    }
+                }
+
+                // Check if it's a ZIP file
+                const contentType = response.headers.get('Content-Type');
+                if (contentType !== 'application/zip') {
+                    // If PHP returns an error message instead of ZIP
+                    return response.text().then(text => {
+                        throw new Error(text || 'Invalid response from server');
+                    });
+                }
+
+                return response.blob().then(blob => ({
+                    blob,
+                    filename
+                }));
+            })
+            .then(({
+                blob,
+                filename
+            }) => {
+                // Create and trigger download
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+                // Update toast message for successful download
+                toast.querySelector('.toast-body').innerHTML = `
+                <div class="text-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Download complete!
+                </div>
+            `;
+
+                // Remove toast after a short delay
+                setTimeout(() => {
+                    toast.remove();
+                }, 1500);
+
+                // Cleanup
+                loadingElement.remove();
+                clickedElement.style.pointerEvents = 'auto';
+            })
+            .catch(error => {
+                console.error('Download failed:', error);
+
+                // Update toast message for error
+                toast.querySelector('.toast-body').innerHTML = `
+                <div class="text-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    ${error.message || 'Download failed. Please try again.'}
+                </div>
+            `;
+
+                // Keep error message visible longer
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+
+                // Cleanup
+                loadingElement.remove();
+                clickedElement.style.pointerEvents = 'auto';
+            });
+    }
 </script>
 
 </body>

@@ -151,6 +151,7 @@ if ($isAdmin) {
                                 <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=logged&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Logged-In Agent</a></li>
                                 <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=agent&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Listing Agent</a></li>
                                 <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=owner&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Listing Owner</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="downloadImages(${property.id}, event)"><i class="fa-solid fa-folder me-2"></i>Download Images (Zip)</a></li>
                                 ${isAdmin ? `
                                 <li><hr class="dropdown-divider"></li>
                                 <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id})"><i class="fa-solid fa-bullhorn me-2"></i>Publish to all</button></li>
