@@ -1,6 +1,6 @@
 <?php include 'views/components/index-buttons.php'; ?>
 
-<div class="w-4/5 mx-auto mb-8 px-4 overflow-hidden">
+<div class="mx-auto mb-8 px-4 overflow-hidden">
     <!-- Loading -->
     <?php include_once('views/components/loading.php'); ?>
 
