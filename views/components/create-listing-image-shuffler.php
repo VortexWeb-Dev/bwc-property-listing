@@ -118,7 +118,7 @@
             row.classList.add('shuffle-row');
 
             for (let i = 0; i < numImageLinks; i++) {
-                if (i % 3 === 0 && i !== 0) {
+                if (i % 5 === 0 && i !== 0) {
                     previewContainer.appendChild(row);
                     row = document.createElement('div');
                     row.classList.add('shuffle-row');
