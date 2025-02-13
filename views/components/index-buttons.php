@@ -6,6 +6,7 @@
         <?php
         $filterLabels = [
           'ALL' => 'All Listings',
+          'POCKET' => 'Pocket Listings',
           'DRAFT' => 'Draft',
           'PUBLISHED' => 'Published',
           'LIVE' => 'Live',
