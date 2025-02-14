@@ -43,8 +43,8 @@
 
     async function fetchLocations(page = 1) {
         const baseUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r';
-        const entityTypeId = 1044;
-        const apiUrl = `${baseUrl}/crm.item.list?entityTypeId=${entityTypeId}&order[id]=desc&select[0]=id&select[1]=ufCrm9Location&start=${(page - 1) * pageSize}`;
+        const entityTypeId = 1098;
+        const apiUrl = `${baseUrl}/crm.item.list?entityTypeId=${entityTypeId}&order[id]=desc&select[0]=id&select[1]=ufCrm33Location&start=${(page - 1) * pageSize}`;
 
         const loading = document.getElementById('loading');
         const locationTable = document.getElementById('location-table');
@@ -83,7 +83,7 @@
                     (location) => `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${location.id}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${location.ufCrm9Location || 'N/A'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${location.ufCrm33Location || 'N/A'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <button onClick="deleteLocation(${location.id})" type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">Delete</button>
                     </td>
@@ -114,7 +114,7 @@
 
     async function deleteLocation(locationId) {
         const baseUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r';
-        const apiUrl = `${baseUrl}/crm.item.delete?entityTypeId=1044&id=${locationId}`;
+        const apiUrl = `${baseUrl}/crm.item.delete?entityTypeId=1098&id=${locationId}`;
 
         try {
             if (confirm('Are you sure you want to delete this location?')) {

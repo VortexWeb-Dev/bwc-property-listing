@@ -74,13 +74,13 @@
         data.building = locationParts[3]?.trim();
 
         const fields = {
-            "ufCrm9Location": data.location,
-            "ufCrm9City": data.city,
-            "ufCrm9Community": data.community,
-            "ufCrm9SubCommunity": data.subCommunity,
-            "ufCrm9Building": data.building,
+            "ufCrm33Location": data.location,
+            "ufCrm33City": data.city,
+            "ufCrm33Community": data.community,
+            "ufCrm33SubCommunity": data.subCommunity,
+            "ufCrm33Building": data.building,
         };
 
-        addItem(1044, fields);
+        addItem(1098, fields);
     }
 </script>

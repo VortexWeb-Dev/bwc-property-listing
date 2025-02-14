@@ -42,10 +42,10 @@
         const searchItems = async (query) => {
             const webhookUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list';
             const data = {
-                entityTypeId: 1044,
-                select: ["id", "ufCrm9Location", "ufCrm9City", "ufCrm9Community", "ufCrm9SubCommunity", "ufCrm9Building"],
+                entityTypeId: 1098,
+                select: ["id", "ufCrm33Location", "ufCrm33City", "ufCrm33Community", "ufCrm33SubCommunity", "ufCrm33Building"],
                 filter: {
-                    "%ufCrm9Location": query
+                    "%ufCrm33Location": query
                 }
             };
 
@@ -77,12 +77,12 @@
                 items.forEach(item => {
                     const itemElement = document.createElement('li');
                     itemElement.classList.add('p-2', 'cursor-pointer', 'border-b', 'hover:bg-gray-100', 'text-gray-700');
-                    itemElement.innerText = item.ufCrm9Location;
+                    itemElement.innerText = item.ufCrm33Location;
 
                     itemElement.addEventListener('click', () => {
-                        searchInput.value = item.ufCrm9Location;
+                        searchInput.value = item.ufCrm33Location;
                         togglePopup(false);
-                        autofillLocation(item.ufCrm9Location, item.ufCrm9City, item.ufCrm9Community, item.ufCrm9SubCommunity, item.ufCrm9Building);
+                        autofillLocation(item.ufCrm33Location, item.ufCrm33City, item.ufCrm33Community, item.ufCrm33SubCommunity, item.ufCrm33Building);
                     });
 
                     resultContainer.appendChild(itemElement);

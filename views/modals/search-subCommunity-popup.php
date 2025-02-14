@@ -17,42 +17,33 @@
                 popup.classList.remove('d-none');
                 popup.style.top = (searchInput.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - 170) + 'px';
                 popup.style.left = (searchInput.getBoundingClientRect().left + (window.pageXOffset || document.documentElement.scrollLeft) - 300) + 'px';
-                // make api call
                 searchItems(query);
             } else {
                 popup.classList.add('d-none');
-                resultContainer.innerHTML = ''; // Clear results if the input is too short
+                resultContainer.innerHTML = '';
             }
-        })
+        });
 
-        // Function to fetch items based on search query
         const searchItems = (query) => {
-            // webhookUrl REST API endpoint for Smart Process Automation or custom entity
             const webhookUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list';
-
             const data = {
-                "entityTypeId": 1088,
-                "select": ["id", "ufCrm23SubCommunity"],
+                "entityTypeId": 1098,
+                "select": ["id", "ufCrm33SubCommunity"],
                 "filter": {
-                    "%ufCrm23SubCommunity": query
+                    "%ufCrm33SubCommunity": query
                 }
-
             };
 
-            // Make the API request
-            // Fetch data from the Webhook
             fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json', // Tell the server we are sending JSON
-                        'Accept': 'application/json' // Tell the server we expect JSON back
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
-                    body: JSON.stringify(data) // Convert JavaScript object to JSON string
+                    body: JSON.stringify(data)
                 })
                 .then(response => response.json())
                 .then(data => {
-
-                    // Clear previous results
                     resultContainer.innerHTML = '';
 
                     if (data.error) {
@@ -61,19 +52,19 @@
                         return;
                     }
 
-                    // Check if there are any results
-                    const items = data.result.items;
-                    if (items.length > 0) {
-                        // Display results
-                        items.forEach(item => {
+                    let items = data.result.items.map(item => item.ufCrm33SubCommunity).filter(Boolean);
+                    let uniqueItems = [...new Set(items)];
+
+                    if (uniqueItems.length > 0) {
+                        uniqueItems.forEach(subCommunity => {
                             const itemElement = document.createElement('li');
                             itemElement.classList.add('list-group-item');
                             itemElement.style.cursor = 'pointer';
-                            itemElement.innerHTML = `${item.ufCrm23SubCommunity}`;
+                            itemElement.innerHTML = subCommunity;
                             itemElement.addEventListener('click', function() {
-                                searchInput.value = item.ufCrm23SubCommunity;
+                                searchInput.value = subCommunity;
                                 popup.classList.add('d-none');
-                                resultContainer.innerHTML = ''; // Clear results if the input is too short
+                                resultContainer.innerHTML = '';
                             });
                             resultContainer.appendChild(itemElement);
                         });

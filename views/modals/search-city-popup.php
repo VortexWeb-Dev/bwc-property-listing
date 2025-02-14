@@ -1,4 +1,4 @@
-<div id="CommunityPopup" class="position-absolute mt-2 p-2 bg-white shadow z-index-1000 d-none" style="width: 300px;">
+<div id="CityPopup" class="position-absolute mt-2 p-2 bg-white shadow z-index-1000 d-none" style="width: 300px;">
     <div class="mb-3" style="max-height: 200px; overflow-y: auto;">
         <p class="form-label pb-2 text-secondary border-bottom">Result</p>
         <div id="resultContainer_city" class="list-group"></div>
@@ -7,7 +7,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.getElementById('city');
-        const popup = document.getElementById('CommunityPopup');
+        const popup = document.getElementById('CityPopup');
         const resultContainer = document.getElementById('resultContainer_city');
 
         searchInput.addEventListener('input', function(e) {
@@ -16,42 +16,33 @@
                 popup.classList.remove('d-none');
                 popup.style.top = (searchInput.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - 170) + 'px';
                 popup.style.left = (searchInput.getBoundingClientRect().left + (window.pageXOffset || document.documentElement.scrollLeft) - 300) + 'px';
-                // make api call
                 searchItems(query);
             } else {
                 popup.classList.add('d-none');
-                resultContainer.innerHTML = ''; // Clear results if the input is too short
+                resultContainer.innerHTML = '';
             }
-        })
+        });
 
-        // Function to fetch items based on search query
         const searchItems = (query) => {
-            // webhookUrl REST API endpoint for Smart Process Automation or custom entity
             const webhookUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list';
-
             const data = {
-                "entityTypeId": 1080,
-                "select": ["id", "ufCrm21City"],
+                "entityTypeId": 1098,
+                "select": ["id", "ufCrm33City"],
                 "filter": {
-                    "%ufCrm21City": query
+                    "%ufCrm33City": query
                 }
-
             };
 
-            // Make the API request
-            // Fetch data from the Webhook
             fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json', // Tell the server we are sending JSON
-                        'Accept': 'application/json' // Tell the server we expect JSON back
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
-                    body: JSON.stringify(data) // Convert JavaScript object to JSON string
+                    body: JSON.stringify(data)
                 })
                 .then(response => response.json())
                 .then(data => {
-
-                    // Clear previous results
                     resultContainer.innerHTML = '';
 
                     if (data.error) {
@@ -60,19 +51,19 @@
                         return;
                     }
 
-                    // Check if there are any results
-                    const items = data.result.items;
-                    if (items.length > 0) {
-                        // Display results
-                        items.forEach(item => {
+                    let items = data.result.items.map(item => item.ufCrm33City).filter(Boolean);
+                    let uniqueItems = [...new Set(items)]; // Remove duplicates
+
+                    if (uniqueItems.length > 0) {
+                        uniqueItems.forEach(city => {
                             const itemElement = document.createElement('li');
                             itemElement.classList.add('list-group-item');
                             itemElement.style.cursor = 'pointer';
-                            itemElement.innerHTML = `${item.ufCrm21City}`;
+                            itemElement.innerHTML = city;
                             itemElement.addEventListener('click', function() {
-                                searchInput.value = item.ufCrm21City;
+                                searchInput.value = city;
                                 popup.classList.add('d-none');
-                                resultContainer.innerHTML = ''; // Clear results if the input is too short
+                                resultContainer.innerHTML = '';
                             });
                             resultContainer.appendChild(itemElement);
                         });
