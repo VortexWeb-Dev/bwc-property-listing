@@ -1244,7 +1244,7 @@
             );
 
             if (!seriesItems.length) {
-                return `${prefix}000001`;
+                return `${prefix}001`;
             }
 
             const lastReference = seriesItems[0].ufCrm5ReferenceNumber;
@@ -1252,8 +1252,8 @@
             const match = lastReference.match(regex);
 
             const nextNumber = match ?
-                String(parseInt(match[1], 10) + 1).padStart(6, '0') :
-                '000001';
+                String(parseInt(match[1], 10) + 1).padStart(3, '0') :
+                '001';
 
             return `${prefix}${nextNumber}`;
         } catch (error) {
