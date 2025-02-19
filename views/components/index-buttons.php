@@ -136,6 +136,7 @@
     const filterLabels = {
       'ALL': 'All Listings',
       'DRAFT': 'Draft',
+      'POCKET': 'Pocket Listings',
       'PUBLISHED': 'Published',
       'LIVE': 'Live',
       'PENDING': 'Pending',

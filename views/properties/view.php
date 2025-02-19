@@ -1,5 +1,6 @@
 <div class="container mx-auto py-8">
 
+    <a href="javascript:history.back()" class="inline-block px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 mb-4">Back</a>
     <div id="property-details" class="flex-1 bg-white shadow-md rounded-lg p-6">
         <div class="flex justify-between">
             <div>

@@ -1,54 +1,53 @@
 <?php include 'views/components/index-buttons.php'; ?>
 
-<div class="w-4/5 mx-auto mb-8 px-4">
+<div class="mx-auto mb-8 px-4 overflow-hidden">
     <!-- Loading -->
     <?php include_once('views/components/loading.php'); ?>
 
-    <div id="property-table" class="flex flex-col">
-        <div class="-m-1.5 overflow-x-auto">
-            <div class="p-1.5 min-w-full inline-block align-middle">
-                <div class="overflow-hidden">
-                    <table class="min-w-full divide-y divide-gray-200 table-responsive">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="px-4 py-3 text-start">
-                                    <label for="hs-at-with-checkboxes-main" class="flex">
-                                        <input id="select-all" onclick="toggleCheckboxes(this)" type="checkbox" class="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" id="hs-at-with-checkboxes-main">
-                                        <span class="sr-only">Checkbox</span>
-                                    </label>
-                                </th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Actions</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Reference</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase max-w-[200px]">Property Details</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Type</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Size</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Price</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Status</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Listing Agent and Owner</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase min-w-[200px]">Published Portals</th>
-                                <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Created On</th>
-                            </tr>
-                        </thead>
-                        <tbody id="property-list" class="divide-y divide-gray-200"></tbody>
-                    </table>
-                </div>
-            </div>
+    <div id="property-table">
+        <div class="table-container">
+            <table class="min-w-full divide-y divide-gray-200 table-responsive">
+                <thead>
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-start">
+                            <label for="hs-at-with-checkboxes-main" class="flex">
+                                <input id="select-all" onclick="toggleCheckboxes(this)" type="checkbox" class="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" id="hs-at-with-checkboxes-main">
+                                <span class="sr-only">Checkbox</span>
+                                <span class="ml-2 text-xs font-medium text-gray-500" id="selected-count"></span>
+                            </label>
+                        </th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Reference</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase max-w-[200px]">Property Details</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Type</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Size</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Price</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Unit Status</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Listing Agent</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Listing Owner</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase min-w-[200px]">Published Portals</th>
+                        <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Created On</th>
+                    </tr>
+                </thead>
+                <tbody id="property-list" class="divide-y divide-gray-200"></tbody>
+            </table>
         </div>
     </div>
-
     <!-- Pagination -->
     <?php include 'views/components/pagination.php'; ?>
+</div>
 
-    <!-- Modals -->
-    <?php include 'views/modals/filter.php'; ?>
-    <?php include 'views/modals/refresh-listing.php'; ?>
-    <?php
-    if ($isAdmin) {
-        include 'views/modals/transfer-to-agent.php';
-        include 'views/modals/transfer-to-owner.php';
-    }
-    ?>
+
+<!-- Modals -->
+<?php include 'views/modals/filter.php'; ?>
+<?php include 'views/modals/refresh-listing.php'; ?>
+<?php
+if ($isAdmin) {
+    include 'views/modals/transfer-to-agent.php';
+    include 'views/modals/transfer-to-owner.php';
+}
+?>
 </div>
 
 
@@ -56,6 +55,8 @@
     let currentPage = 1;
     const pageSize = 50;
     let totalPages = 0;
+
+    const isAdmin = <?php echo json_encode($isAdmin); ?>;
 
     async function fetchProperties(page = 1, filters = null) {
         const baseUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r';
@@ -121,11 +122,6 @@
             nextPage.disabled = page === totalPages || totalPages === 0;
             pageInfo.textContent = `Page ${page} of ${totalPages}`;
 
-            if (properties.length == 0) {
-                pagination.classList.add('hidden');
-                propertyList.innerHTML = `<tr><td colspan="8" class="text-center">No properties found</td></tr>`
-            }
-
             propertyList.innerHTML = properties
                 .map(
                     (property) => `
@@ -146,25 +142,31 @@
                             <ul class="dropdown-menu shadow absolute z-10" style="max-height: 50vh; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #6B7280 #f9fafb; font-size:medium;">
                                 <li><a class="dropdown-item" href="?page=edit-property&id=${property.id}"><i class="fa-solid fa-edit me-2"></i>Edit</a></li>
                                 <li><a class="dropdown-item" href="?page=view-property&id=${property.id}"><i class="fa-solid fa-eye me-2"></i>View Details</a></li>
-                                
                                 <li><button class="dropdown-item" onclick="handleAction('duplicate', ${property.id})"><i class="fa-solid fa-copy me-2"></i>Duplicate Listing</button></li>
                                 <li>
                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#referenceModal" data-property-id="${property.id}" data-reference="${property.ufCrm5ReferenceNumber}">
                                         <i class="fa-solid fa-sync me-2"></i>Refresh Listing
                                     </a>
                                 </li>
-                                <li class="admin-only"><hr class="dropdown-divider"></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('publish', ${property.id})"><i class="fa-solid fa-bullhorn me-2"></i>Publish to all</button></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'pf')"><i class="fa-solid fa-search me-2"></i>Publish to PF</button></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'bayut')"><i class="fa-solid fa-building me-2"></i>Publish to Bayut</button></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'dubizzle')"><i class="fa-solid fa-home me-2"></i>Publish to Dubizzle</button></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'website')"><i class="fa-solid fa-globe me-2"></i>Publish to Website</button></li>
-                                <li class="admin-only"><hr class="dropdown-divider"></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id})"><i class="fa-solid fa-archive me-2"></i>Unpublish from all</button></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'pf')"><i class="fa-solid fa-search me-2"></i>Unpublish from PF</button></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'bayut')"><i class="fa-solid fa-building me-2"></i>Unpublish from Bayut</button></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'dubizzle')"><i class="fa-solid fa-home me-2"></i>Unpublish from Dubizzle</button></li>
-                                <li class="admin-only"><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'website')"><i class="fa-solid fa-globe me-2"></i>Unpublish from Website</button></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=logged&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Logged-In Agent</a></li>
+                                <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=agent&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Listing Agent</a></li>
+                                <li><a class="dropdown-item" target="_blank" href="download-pdf.php?type=owner&id=${property.id}"><i class="fa-solid fa-print me-2"></i>Download PDF as Listing Owner</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="downloadImages(${property.id}, event)"><i class="fa-solid fa-folder me-2"></i>Download Images (Zip)</a></li>
+                                ${isAdmin ? `
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id})"><i class="fa-solid fa-bullhorn me-2"></i>Publish to all</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'pf')"><i class="fa-solid fa-search me-2"></i>Publish to PF</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'bayut')"><i class="fa-solid fa-building me-2"></i>Publish to Bayut</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'dubizzle')"><i class="fa-solid fa-home me-2"></i>Publish to Dubizzle</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'website')"><i class="fa-solid fa-globe me-2"></i>Publish to Website</button></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id})"><i class="fa-solid fa-archive me-2"></i>Unpublish from all</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'pf')"><i class="fa-solid fa-search me-2"></i>Unpublish from PF</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'bayut')"><i class="fa-solid fa-building me-2"></i>Unpublish from Bayut</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'dubizzle')"><i class="fa-solid fa-home me-2"></i>Unpublish from Dubizzle</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'website')"><i class="fa-solid fa-globe me-2"></i>Unpublish from Website</button></li>
+                                ` : ''}
                                 <li><hr class="dropdown-divider"></li>
                                 <li><button class="dropdown-item text-danger" onclick="handleAction('archive', ${property.id})"><i class="fa-solid fa-archive me-2"></i>Archive</button></li>
                                 <li><button class="dropdown-item text-danger" onclick="handleAction('delete', ${property.id})"><i class="fa-solid fa-trash me-2"></i>Delete</button></li>
@@ -176,7 +178,7 @@
                         <div class="flex">
                             <img class="w-20 h-20 rounded object-cover mr-4" src="${property.ufCrm5PhotoLinks[0] || 'https://placehold.jp/150x150.png'}" alt="${property.ufCrm5TitleEn || 'N/A'}">
                             <div class="text-sm">
-                                <p class="text-gray-800 font-semibold">${property.ufCrm5TitleEn || 'N/A'}</p>
+                                <a href="?page=view-property&id=${property.id}" class="text-gray-800 font-semibold hover:underline hover:text-blue-600 text-decoration-none">${property.ufCrm5TitleEn || 'N/A'}</a>
                                 <p class="text-gray-400 text-wrap max-w-full truncate">${property.ufCrm5DescriptionEn.slice(0, 60) + '...' || 'N/A'}</p>
                             </div>
                         </div>
@@ -225,6 +227,8 @@
                     </td>
                     <td class="px-3 py-4 whitespace-nowrap text-xs font-medium text-gray-800">
                         <p class="">${property.ufCrm5AgentName || ''}</p> 
+                    </td>
+                    <td class="px-3 py-4 whitespace-nowrap text-xs font-medium text-gray-800">
                         <p class="">${property.ufCrm5ListingOwner || ''}</p> 
                     </td>
                    <td class="px-3 py-4 whitespace-nowrap text-xs font-medium text-gray-800">
@@ -263,14 +267,6 @@
         }
         fetchProperties(currentPage, {
             ufCrm5Status: 'POCKET',
-        });
-    }
-
-    function toggleCheckboxes(source) {
-        const checkboxes = document.querySelectorAll('input[name="property_ids[]"]');
-
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = source.checked;
         });
     }
 

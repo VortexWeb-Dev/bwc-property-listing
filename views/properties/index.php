@@ -13,6 +13,7 @@
                             <label for="hs-at-with-checkboxes-main" class="flex">
                                 <input id="select-all" onclick="toggleCheckboxes(this)" type="checkbox" class="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" id="hs-at-with-checkboxes-main">
                                 <span class="sr-only">Checkbox</span>
+                                <span class="ml-2 text-xs font-medium text-gray-500" id="selected-count"></span>
                             </label>
                         </th>
                         <th scope="col" class="px-3 py-3 text-start text-xs font-medium text-gray-500 uppercase">Actions</th>
@@ -177,7 +178,7 @@ if ($isAdmin) {
                         <div class="flex">
                             <img class="w-20 h-20 rounded object-cover mr-4" src="${property.ufCrm5PhotoLinks[0] || 'https://placehold.jp/150x150.png'}" alt="${property.ufCrm5TitleEn || 'N/A'}">
                             <div class="text-sm">
-                                <p class="text-gray-800 font-semibold">${property.ufCrm5TitleEn || 'N/A'}</p>
+                                <a href="?page=view-property&id=${property.id}" class="text-gray-800 font-semibold hover:underline hover:text-blue-600 text-decoration-none">${property.ufCrm5TitleEn || 'N/A'}</a>
                                 <p class="text-gray-400 text-wrap max-w-full truncate">${property.ufCrm5DescriptionEn.slice(0, 60) + '...' || 'N/A'}</p>
                             </div>
                         </div>
@@ -265,14 +266,6 @@ if ($isAdmin) {
             currentPage++;
         }
         fetchProperties(currentPage);
-    }
-
-    function toggleCheckboxes(source) {
-        const checkboxes = document.querySelectorAll('input[name="property_ids[]"]');
-
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = source.checked;
-        });
     }
 
     function formatPrice(amount, locale = 'en-US', currency = 'AED') {
