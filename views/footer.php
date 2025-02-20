@@ -1238,23 +1238,26 @@
         try {
             const response = await fetch(url);
             const data = await response.json();
-
             const seriesItems = data.result.items.filter(item =>
-                item.ufCrm5ReferenceNumber.startsWith(prefix)
+                item.ufCrm5ReferenceNumber?.startsWith(prefix)
             );
 
             if (!seriesItems.length) {
                 return `${prefix}001`;
             }
 
-            const lastReference = seriesItems[0].ufCrm5ReferenceNumber;
-            const regex = new RegExp(`^${prefix}(\\d{6})$`);
-            const match = lastReference.match(regex);
+            // Find the highest number in the existing references
+            const highestNumber = seriesItems.reduce((max, item) => {
+                const regex = new RegExp(`^${prefix}(\\d{3})$`);
+                const match = item.ufCrm5ReferenceNumber.match(regex);
+                if (match) {
+                    const num = parseInt(match[1], 10);
+                    return Math.max(max, num);
+                }
+                return max;
+            }, 0);
 
-            const nextNumber = match ?
-                String(parseInt(match[1], 10) + 1).padStart(3, '0') :
-                '001';
-
+            const nextNumber = String(highestNumber + 1).padStart(3, '0');
             return `${prefix}${nextNumber}`;
         } catch (error) {
             console.error('Error fetching reference:', error);
