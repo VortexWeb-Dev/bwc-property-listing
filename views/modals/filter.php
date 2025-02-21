@@ -100,6 +100,18 @@
                             </select>
                         </div>
                         <div>
+                            <label for="status" class="block text-sm font-medium mb-2">Status</label>
+                            <select name="status" id="status" class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                                <option value="">Please select</option>
+                                <option value="PUBLISHED">Published</option>
+                                <option value="UNPUBLISHED">Unpublished</option>
+                                <option value="LIVE">Live</option>
+                                <option value="DRAFT">Draft</option>
+                                <option value="ARCHIVED">Archived</option>
+                                <option value="POCKET">Pocket</option>
+                            </select>
+                        </div>
+                        <div>
                             <label for="saleRent" class="block text-sm font-medium mb-2">Sale/Rent</label>
                             <select name="saleRent" id="saleRent" class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
                                 <option value="">Please select</option>
@@ -110,12 +122,6 @@
                         <div>
                             <label for="listing_agent" class="block text-sm font-medium mb-2">Listing Agent</label>
                             <select id="listing_agent" name="listing_agent" class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-                                <option value="">Please select</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="developer" class="block text-sm font-medium mb-2">Developer</label>
-                            <select id="developer" name="developer" class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
                                 <option value="">Please select</option>
                             </select>
                         </div>
@@ -167,6 +173,12 @@
                             <label for="price" class="block text-sm font-medium mb-2">Price</label>
                             <input type="number" step="0.01" id="price" name="price" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
                         </div>
+                        <div>
+                            <label for="developer" class="block text-sm font-medium mb-2">Developer</label>
+                            <select id="developer" name="developer" class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                                <option value="">Please select</option>
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -214,7 +226,8 @@
             'bedrooms': 'ufCrm5Bedroom',
             'bathrooms': 'ufCrm5Bathroom',
             'price': 'ufCrm5Price',
-            'portal': 'portal'
+            'portal': 'portal',
+            'status': 'status'
         }
 
         let filterParams = {};
@@ -238,9 +251,22 @@
             delete filterParams['portal'];
         }
 
-        // console.log("entriesArray", entriesArray);
-        // console.log("Params", params);
-        // console.log("filterParams", filterParams);
+        if (filterParams['status']) {
+            if (filterParams['status'] == 'PUBLISHED') {
+                filterParams['ufCrm5Status'] = 'PUBLISHED';
+            } else if (filterParams['status'] == 'UNPUBLISHED') {
+                filterParams['ufCrm5Status'] = 'UNPUBLISHED';
+            } else if (filterParams['status'] == 'LIVE') {
+                filterParams['ufCrm5Status'] = 'LIVE';
+            } else if (filterParams['status'] == 'DRAFT') {
+                filterParams['ufCrm5Status'] = 'DRAFT';
+            } else if (filterParams['status'] == 'ARCHIVED') {
+                filterParams['ufCrm5Status'] = 'ARCHIVED';
+            } else if (filterParams['status'] == 'POCKET') {
+                filterParams['ufCrm5Status'] = 'POCKET';
+            }
+            delete filterParams['status'];
+        }
 
         fetchProperties(currentPage, filterParams);
         document.getElementById('filterForm').reset();
