@@ -288,8 +288,8 @@
                 }
 
                 const swapy = Swapy.createSwapy(previewContainer, {
-                    animation: 'dynamic',
-                    swapMode: 'drop',
+                    animation: 'spring',
+                    swapMode: 'hover',
                 });
 
                 swapy.onSwapEnd((event) => {
