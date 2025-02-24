@@ -64,10 +64,10 @@
         document.getElementById("photos").addEventListener("change", function(event) {
             const files = Array.from(event.target.files);
 
-            // Minimum 8 images
+            // Minimum 2 images
             if (files.length < 2) {
                 document.getElementById("photosMessage").classList.remove('hidden');
-                document.getElementById("photosMessage").textContent = `Please select at least 3 images. You have selected ${files.length}.`;
+                document.getElementById("photosMessage").textContent = `Please select at least 2 images. You have selected ${files.length}.`;
                 return;
             }
             selectedFiles = [];
