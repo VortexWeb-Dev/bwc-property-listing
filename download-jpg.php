@@ -133,7 +133,7 @@
               canvas.height = imgElement.height;
               const ctx = canvas.getContext("2d");
               ctx.drawImage(imgElement, 0, 0);
-              img.src = canvas.toDataURL("image/png");
+              img.src = canvas.toDataURL("image/jpg");
               resolve();
             };
             imgElement.onerror = reject;
@@ -157,8 +157,8 @@
         windowHeight: document.body.scrollHeight,
       }).then(canvas => {
         const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = sanitizeFileName(`${property.ufCrm5TitleEn}`) + '.png';
+        link.href = canvas.toDataURL("image/jpg");
+        link.download = sanitizeFileName(`${property.ufCrm5TitleEn}`) + '.jpg';
         link.click();
       });
     });
