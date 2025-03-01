@@ -123,6 +123,33 @@
 </div>
 
 <script>
+  function filterProperties(filterKey) {
+    localStorage.setItem('listingFilter', filterKey);
+
+    const filterLabels = {
+      'ALL': 'All Listings',
+      'DRAFT': 'Draft',
+      'POCKET': 'Pocket Listings',
+      'PUBLISHED': 'Published',
+      'LIVE': 'Live',
+      'PENDING': 'Pending',
+      'ARCHIVED': 'Archived',
+      'DUPLICATE': 'Duplicate',
+    };
+
+    // Update button text to reflect the selected filter
+    document.querySelector('.btn.btn-filter').innerText = filterLabels[filterKey] || 'Select Filter';
+
+    // Update the global filter state for status. (Using an empty string removes it.)
+    if (filterKey === 'ALL') {
+      updateFilter('ufCrm5Status', '');
+    } else {
+      updateFilter('ufCrm5Status', filterKey);
+    }
+  }
+</script>
+
+<!-- <script>
   const savedFilter = localStorage.getItem('listingFilter') || 'ALL';
   document.querySelectorAll('.dropdown-item').forEach(item => {
     if (item.innerText === document.querySelector('.btn').innerText) {
@@ -165,4 +192,4 @@
 
     document.querySelector('#clearFiltersBtn').classList.remove('d-none');
   }
-</script>
+</script> -->

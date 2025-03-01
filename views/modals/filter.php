@@ -200,14 +200,14 @@
         const formData = new FormData(form);
         const params = new URLSearchParams();
 
-        const entriesArray = Array.from(formData.entries());
-
-        for (const [key, value] of entriesArray) {
+        // Build URLSearchParams from non-empty fields
+        for (const [key, value] of formData.entries()) {
             if (value != null && value != "") {
                 params.append(key, value);
             }
         }
 
+        // Mapping form field names to API field names
         const fieldMappings = {
             'city': '%ufCrm5City',
             'community': '%ufCrm5Community',
@@ -228,29 +228,32 @@
             'price': 'ufCrm5Price',
             'portal': 'portal',
             'status': 'status'
-        }
+        };
 
         let filterParams = {};
 
+        // Remap the form values to the proper filter parameters
         for (const [key, value] of params) {
             if (key in fieldMappings) {
                 filterParams[fieldMappings[key]] = value;
             }
         }
 
+        // Handle special cases for "portal" field
         if (filterParams['portal']) {
             if (filterParams['portal'] == 'PF') {
-                filterParams['ufCrm5PfEnable'] = 1
+                filterParams['ufCrm5PfEnable'] = 1;
             } else if (filterParams['portal'] == 'BAYUT') {
-                filterParams['ufCrm5BayutEnable'] = 1
+                filterParams['ufCrm5BayutEnable'] = 1;
             } else if (filterParams['portal'] == 'DUBIZZLE') {
-                filterParams['ufCrm5DubizzleEnable'] = 1
+                filterParams['ufCrm5DubizzleEnable'] = 1;
             } else if (filterParams['portal'] == 'WEBSITE') {
-                filterParams['ufCrm5WebsiteEnable'] = 1
+                filterParams['ufCrm5WebsiteEnable'] = 1;
             }
             delete filterParams['portal'];
         }
 
+        // Handle special cases for "status" field
         if (filterParams['status']) {
             if (filterParams['status'] == 'PUBLISHED') {
                 filterParams['ufCrm5Status'] = 'PUBLISHED';
@@ -268,11 +271,12 @@
             delete filterParams['status'];
         }
 
-        fetchProperties(currentPage, filterParams);
+        // Merge the modal filters with our global activeFilters.
+        setFilters(filterParams);
+
+        // Reset the form and close the modal
         document.getElementById('filterForm').reset();
         document.querySelector('button[data-bs-dismiss="modal"]').click();
-
-        document.querySelector('#clearFiltersBtn').classList.remove('d-none');
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -373,9 +377,4 @@
 
         fetchAndDisplayOptions();
     });
-</script>
-
-
-<script>
-
 </script>

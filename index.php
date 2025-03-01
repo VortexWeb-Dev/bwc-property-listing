@@ -42,5 +42,54 @@ if (!array_key_exists($page, $pages)) {
     // localStorage.setItem('isAdmin', <?php echo json_encode($isAdmin); ?>);
 </script>
 
+<script>
+    // Global filter state – holds all active filters
+    let activeFilters = {};
+
+    // Call this function whenever you want to update (or add/remove) a single filter.
+    function updateFilter(key, value) {
+        // Remove filter if value is empty, null, or 'ALL'
+        if (value === '' || value === null || value === 'ALL') {
+            delete activeFilters[key];
+        } else {
+            activeFilters[key] = value;
+        }
+        // Call fetchProperties with all active filters
+        fetchProperties(currentPage, activeFilters);
+        // Show/hide the clear filters button based on active filters
+        if (Object.keys(activeFilters).length > 0) {
+            document.querySelector('#clearFiltersBtn').classList.remove('d-none');
+        } else {
+            document.querySelector('#clearFiltersBtn').classList.add('d-none');
+        }
+    }
+
+    // Merge multiple filters at once (used by the modal)
+    function setFilters(newFilters) {
+        activeFilters = Object.assign({}, activeFilters, newFilters);
+        // Remove any keys that have empty values
+        for (let key in activeFilters) {
+            if (activeFilters[key] === '' || activeFilters[key] === null || activeFilters[key] === 'ALL') {
+                delete activeFilters[key];
+            }
+        }
+        fetchProperties(currentPage, activeFilters);
+        if (Object.keys(activeFilters).length > 0) {
+            document.querySelector('#clearFiltersBtn').classList.remove('d-none');
+        } else {
+            document.querySelector('#clearFiltersBtn').classList.add('d-none');
+        }
+    }
+
+    // Clear all active filters
+    function clearAllFilters() {
+        activeFilters = {};
+        fetchProperties(currentPage);
+        document.querySelector('#clearFiltersBtn').classList.add('d-none');
+        // Optionally: reset UI elements (dropdowns, form fields, etc.)
+    }
+</script>
+
 <?php
 include __DIR__ . '/views/footer.php';
+?>

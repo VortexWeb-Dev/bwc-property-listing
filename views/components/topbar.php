@@ -126,35 +126,16 @@ if (isset($_GET['page'])) {
             'DRAFT': 'Draft',
             'ARCHIVED': 'Archived',
             'PF': 'PF',
-            'POCKET': 'Pocket',
         };
 
-        document.querySelector('.btn.btn-filter').innerText = filterLabels[filterKey] || 'Select Filter';
-
-        document.querySelectorAll('.dropdown-item.filter-item').forEach(item => {
-            if (item.innerText === filterLabels[filterKey]) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
-        });
-
+        // For the "ALL" filter, remove the status filter.
         if (filterKey === 'ALL') {
-            fetchProperties(currentPage);
-            return;
+            updateFilter('ufCrm5Status', '');
+        } else if (filterKey === 'PF') {
+            // For PF, update the PF-enabled filter. (Adjust the parameter as needed.)
+            updateFilter('ufCrm5PfEnable', 'Y');
+        } else {
+            updateFilter('ufCrm5Status', filterKey);
         }
-
-        if(filterKey === 'PF') {
-            fetchProperties(currentPage, {
-                '!ufCrm5PfEnable': 'N'
-            });
-            return;
-        }
-
-        fetchProperties(currentPage, {
-            'ufCrm5Status': filterKey
-        });
-
-        document.querySelector('#clearFiltersBtn').classList.remove('d-none');
     }
 </script>
