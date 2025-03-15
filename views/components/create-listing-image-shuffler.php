@@ -1,6 +1,6 @@
 <div class="text-center mb-3">
     <input type="file" class="d-none" id="photos" name="photos[]" accept="image/*" multiple>
-    <label for="photos" class="dropzone d-block">
+    <label for="photos" class="dropzone d-block" id="dropzone">
         <div class="cursor-pointer p-12 flex justify-center bg-white border border-gray-300 rounded-xl" data-hs-file-upload-trigger="">
             <div class="text-center">
                 <span class="inline-flex justify-center items-center size-16 bg-gray-100 text-gray-800 rounded-full">
@@ -15,12 +15,10 @@
                     <span class="pe-1 font-medium text-gray-800">
                         Drop your file here or
                     </span>
-                    <span class="bg-white font-semibold text-blue-600 hover:text-blue-700 rounded-lg decoration-2 hover:underline focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2">browse</span>
+                    <span class="bg-white font-semibold text-blue-600 hover:text-blue-700 rounded-lg decoration-2 hover:underline">browse</span>
                 </div>
 
-                <p class="mt-1 text-xs text-gray-400">
-                    Pick a file up to 10MB.
-                </p>
+                <p class="mt-1 text-xs text-gray-400">Pick a file up to 10MB.</p>
             </div>
         </div>
     </label>
@@ -29,6 +27,40 @@
 <div id="photoPreviewContainer" class="photoPreviewContainer"></div>
 <input type="hidden" id="selectedImages" name="selectedImages" />
 
+<style>
+    .photoPreviewContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .slot {
+        width: 100px;
+        height: 100px;
+        position: relative;
+    }
+
+    .slot img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .remove-btn {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -36,142 +68,72 @@
         let selectedFiles = [];
         const previewContainer = document.getElementById('photoPreviewContainer');
         const selectedImagesInput = document.getElementById('selectedImages');
+        const photosInput = document.getElementById('photos');
+        const errorMessage = document.getElementById('photosMessage');
 
-        function addSwapy() {
-            const swapy = Swapy.createSwapy(previewContainer, {
-                animation: 'spring',
-                swapMode: 'hover'
-            });
-
-
-            swapy.onSwapEnd((event) => {
-                console.log('Swap end event:', event.slotItemMap.asMap);
-
-                imageLinks = [];
-
-                event.slotItemMap.asMap.forEach((item, index) => {
-                    let element = document.querySelector(`[data-swapy-item="${item}"]`);
-                    imageLinks.push(element.querySelector('img').src);
-                });
-
-
-
-
-                updateSelectedImagesInput();
-            });
-        }
-
-        document.getElementById("photos").addEventListener("change", function(event) {
-            const files = Array.from(event.target.files);
-
-            // Minimum 2 images
-            if (files.length < 2) {
-                document.getElementById("photosMessage").classList.remove('hidden');
-                document.getElementById("photosMessage").textContent = `Please select at least 2 images. You have selected ${files.length}.`;
-                return;
-            }
-            selectedFiles = [];
+        function handleFiles(files) {
+            files = Array.from(files);
 
             files.forEach((file) => {
-                if (file.size >= 10 * 1024 * 1024) {
-                    // alert(`The file "${file.name}" is too large (10MB or greater). Please select a smaller file.`);
-                    document.getElementById("photosMessage").classList.remove('hidden');
-                    document.getElementById("photosMessage").textContent = `The file "${file.name}" is too large (10MB or greater). Please select a smaller file.`;
-                } else if (!selectedFiles.some((f) => f.name === file.name)) {
+                if (file.size < 10 * 1024 * 1024 && !selectedFiles.some(f => f.name === file.name)) {
                     selectedFiles.push(file);
-                    document.getElementById("photosMessage").classList.add('hidden');
-                }
-            });
-
-            // Show loading images message
-            document.getElementById("photosMessage").classList.remove('hidden');
-            document.getElementById("photosMessage").classList.remove('text-red-500');
-            document.getElementById("photosMessage").classList.add('text-blue-500');
-            document.getElementById("photosMessage").textContent = `Loading images...`;
-            updatePhotoPreview();
-        });
-
-
-        function updatePhotoPreview() {
-            const promises = selectedFiles.map((file) => {
-                return new Promise((resolve) => {
                     const reader = new FileReader();
-                    reader.readAsDataURL(file);
                     reader.onload = function(e) {
                         imageLinks.push(e.target.result);
-                        resolve();
+                        updatePhotoPreview();
                     };
-                });
+                    reader.readAsDataURL(file);
+                }
             });
-
-            Promise.all(promises).then(() => {
-                previewImages(imageLinks);
-            });
-
         }
 
-        function previewImages(imageLinks) {
-            const numImageLinks = imageLinks.length;
+        function updatePhotoPreview() {
             previewContainer.innerHTML = "";
-
-            let row = document.createElement('div');
-            row.classList.add('shuffle-row');
-
-            for (let i = 0; i < numImageLinks; i++) {
-                if (i % 5 === 0 && i !== 0) {
-                    previewContainer.appendChild(row);
-                    row = document.createElement('div');
-                    row.classList.add('shuffle-row');
-                }
-
+            imageLinks.forEach((src, i) => {
                 const slot = document.createElement('div');
                 slot.classList.add('slot');
-                slot.setAttribute('data-swapy-slot', i + 1);
 
-                const item = document.createElement('div');
-                item.classList.add('item');
-                item.setAttribute('data-swapy-item', String.fromCharCode(97 + i));
-
-                const image = document.createElement('div');
                 const img = document.createElement('img');
-                img.src = imageLinks[i];
-
-                image.appendChild(img);
-                item.appendChild(image);
-                slot.appendChild(item);
+                img.src = src;
 
                 const removeBtn = document.createElement("button");
                 removeBtn.innerHTML = "&times;";
-                removeBtn.classList.add("position-absolute", "top-0", "end-0", "btn", "btn-sm", "btn-danger", "m-1");
-                removeBtn.style.zIndex = "1";
+                removeBtn.classList.add("remove-btn");
                 removeBtn.onclick = function() {
                     selectedFiles.splice(i, 1);
                     imageLinks.splice(i, 1);
-
-                    previewImages(imageLinks);
-
+                    updatePhotoPreview();
                 };
 
-                item.appendChild(removeBtn);
-
-                row.appendChild(slot);
-            }
-
-            previewContainer.appendChild(row);
-            addSwapy();
-
-            console.log("imageLinks-function", imageLinks);
-            console.log("selectedFiles-function", selectedFiles);
-
-            // Reset message
-            document.getElementById("photosMessage").classList.add('hidden');
-
+                slot.appendChild(img);
+                slot.appendChild(removeBtn);
+                previewContainer.appendChild(slot);
+            });
             updateSelectedImagesInput();
         }
 
         function updateSelectedImagesInput() {
             selectedImagesInput.value = JSON.stringify(imageLinks);
-            console.log("selectedImagesInput.value", selectedImagesInput.value);
         }
+
+        photosInput.addEventListener("change", function(event) {
+            handleFiles(event.target.files);
+        });
+
+        const dropzone = document.querySelector('.dropzone');
+        dropzone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropzone.classList.add('border-blue-500');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-blue-500');
+        });
+
+        dropzone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropzone.classList.remove('border-blue-500');
+            handleFiles(event.dataTransfer.files);
+        });
     });
 </script>
