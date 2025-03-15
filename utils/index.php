@@ -347,10 +347,23 @@ function formatCompletionStatus($property)
     }
 }
 
+function getLastUpdated()
+{
+    $response = CRest::call('crm.item.list', [
+        'order' => ['updatedTime' => 'desc'],
+        'select' => ['updatedTime'],
+    ]);
+
+    $isoDate = $response['result']['items'][0]['updatedTime'];
+    $dateTime = new DateTime($isoDate);
+
+    return $dateTime->format('Y-m-d H:i:s');
+}
+
 function generatePfXml($properties)
 {
     $xml = '<?xml version="1.0" encoding="UTF-8"?>';
-    $xml .= '<list last_update="' . date('Y-m-d H:i:s') . '" listing_count="' . count($properties) . '">';
+    $xml .= '<list last_update="' . getLastUpdated() . '" listing_count="' . count($properties) . '">';
 
     foreach ($properties as $property) {
         $xml .= '<property last_update="' . formatDate($property['updatedTime'] ?? '') . '" id="' . htmlspecialchars($property['id'] ?? '') . '">';
@@ -406,7 +419,7 @@ function generatePfXml($properties)
 function generateBayutXml($properties)
 {
     $xml = '<?xml version="1.0" encoding="UTF-8"?>';
-    $xml .= '<Properties last_update="' . date('Y-m-d H:i:s') . '" listing_count="' . count($properties) . '">';
+    $xml .= '<Properties last_update="' . getLastUpdated() . '" listing_count="' . count($properties) . '">';
 
     foreach ($properties as $property) {
         $xml .= '<Property id="' . htmlspecialchars($property['id'] ?? '') . '">';

@@ -10,7 +10,6 @@
                         <line x1="12" x2="12" y1="3" y2="15"></line>
                     </svg>
                 </span>
-
                 <div class="mt-4 flex flex-wrap justify-center text-sm leading-6 text-gray-600">
                     <span class="pe-1 font-medium text-gray-800">
                         Drop your file here or
@@ -64,8 +63,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        let imageLinks = [];
-        let selectedFiles = [];
+        let imageLinks = []; // Base64 URLs for preview
+        let selectedFiles = []; // File objects for upload
         const previewContainer = document.getElementById('photoPreviewContainer');
         const selectedImagesInput = document.getElementById('selectedImages');
         const photosInput = document.getElementById('photos');
