@@ -299,5 +299,25 @@ if ($isAdmin) {
         }
     }
 
-    fetchProperties(currentPage);
+    // Initialize filter state
+    let savedFilter = localStorage.getItem('listingFilter');
+    if (!savedFilter) {
+        savedFilter = 'PUBLISHED'; // Default to PUBLISHED
+        localStorage.setItem('listingFilter', savedFilter);
+    }
+
+    // Build initial filters
+    let initialFilters = null;
+    if (savedFilter === 'PF') {
+        initialFilters = {
+            'ufCrm5PfEnable': 'Y'
+        };
+    } else if (savedFilter !== 'ALL') {
+        initialFilters = {
+            'ufCrm5Status': savedFilter
+        };
+    }
+
+    // Fetch properties with initial filter
+    fetchProperties(currentPage, initialFilters);
 </script>
