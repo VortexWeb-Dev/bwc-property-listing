@@ -1,5 +1,5 @@
 <div class="text-center mb-3">
-    <input type="file" class="d-none" id="photos" name="photos[]" accept="image/*" multiple>
+    <input type="file" class="d-none" id="photos" name="photos" accept="image/*" multiple>
     <label for="photos" class="dropzone p-4 d-block" id="dropzone">
         <div class="cursor-pointer p-12 flex justify-center bg-white border border-gray-300 rounded-xl" data-hs-file-upload-trigger>
             <div class="text-center">
@@ -27,17 +27,25 @@
 <label class="block text-sm font-medium mb-2">New Photos</label>
 <div id="newPhotoPreviewContainer" class="photoPreviewContainer mb-4"></div>
 
-<label class="block text-sm font-medium mb-2">Existing Photos</label>
+<div class="flex justify-between items-center mb-2">
+    <label class="block text-sm font-medium">Existing Photos</label>
+    <button type="button" id="clearAllPhotos" class="px-2 py-1 btn btn-danger text-white rounded-md text-xs hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1">
+        Clear All
+    </button>
+</div>
 <div id="existingPhotoPreviewContainer" class="photoPreviewContainer mb-4"></div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        let selectedFiles = [];
+        let selectedFiles = "";
         const dropzone = document.getElementById("dropzone");
         const fileInput = document.getElementById("photos");
         const previewContainer = document.getElementById("newPhotoPreviewContainer");
         const selectedImagesInput = document.getElementById("selectedImages");
         const message = document.getElementById("photosMessage");
+        const existingPhotoPreviewContainer = document.getElementById("existingPhotoPreviewContainer");
+        const existingPhotosInput = document.getElementById("existingPhotos");
+        const clearAllPhotosButton = document.getElementById("clearAllPhotos");
 
         function updatePreview() {
             previewContainer.innerHTML = "";
@@ -55,7 +63,6 @@
 
                     const removeBtn = document.createElement("button");
                     removeBtn.innerHTML = "&times;";
-                    // removeBtn.classList.add("absolute", "top-0", "right-0", "bg-red-500", "text-white", "rounded-full", "w-5", "h-5", "flex", "items-center", "justify-center");
                     removeBtn.classList.add(
                         "position-absolute",
                         "top-0",
@@ -104,5 +111,13 @@
             message.classList.add("hidden");
             updatePreview();
         }
+
+        // Clear all existing photos functionality
+        clearAllPhotosButton.addEventListener("click", function() {
+            existingPhotosInput.value = ""; // Set the existingPhotos hidden input to an empty array
+            existingPhotoPreviewContainer.innerHTML = ""; // Clear the displayed existing photos
+            // Optionally, you might want to visually indicate that the action was taken
+            alert("All existing photos will be removed upon saving.");
+        });
     });
 </script>
