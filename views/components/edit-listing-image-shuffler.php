@@ -55,7 +55,16 @@
 
                     const removeBtn = document.createElement("button");
                     removeBtn.innerHTML = "&times;";
-                    removeBtn.classList.add("absolute", "top-0", "right-0", "bg-red-500", "text-white", "rounded-full", "w-5", "h-5", "flex", "items-center", "justify-center");
+                    // removeBtn.classList.add("absolute", "top-0", "right-0", "bg-red-500", "text-white", "rounded-full", "w-5", "h-5", "flex", "items-center", "justify-center");
+                    removeBtn.classList.add(
+                        "position-absolute",
+                        "top-0",
+                        "end-0",
+                        "btn",
+                        "btn-sm",
+                        "btn-danger",
+                        "m-1"
+                    );
                     removeBtn.onclick = function() {
                         selectedFiles.splice(index, 1);
                         updatePreview();
