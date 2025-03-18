@@ -207,23 +207,16 @@
         const formData = new FormData(form);
         const params = new URLSearchParams();
 
-        // Remove empty values and convert to object
+        // Convert FormData to object and remove empty values
         const formValues = Object.fromEntries([...formData.entries()].filter(([_, v]) => v));
 
-        // Handle price range conflicts
+        // Handle price conflicts
         if (formValues.price && (formValues.min_price || formValues.max_price)) {
             alert('Please use either exact price OR price range, not both');
             return;
         }
 
-        // Build URLSearchParams from non-empty fields
-        for (const [key, value] of formData.entries()) {
-            if (value != null && value != "") {
-                params.append(key, value);
-            }
-        }
-
-        // Mapping form field names to API field names
+        // Build URLSearchParams with proper encoding
         const fieldMappings = {
             'city': '%ufCrm5City',
             'community': '%ufCrm5Community',
@@ -242,62 +235,54 @@
             'bedrooms': 'ufCrm5Bedroom',
             'bathrooms': 'ufCrm5Bathroom',
             'price': 'ufCrm5Price',
-            'min_price': '>=ufCrm5Price',
-            'max_price': '<=ufCrm5Price',
+            'min_price': '>ufCrm5Price',
+            'max_price': '<ufCrm5Price',
             'portal': 'portal',
             'status': 'status'
         };
 
         let filterParams = {};
 
-        // Remap the form values to the proper filter parameters
-        for (const [key, value] of params) {
-            if (key in fieldMappings) {
-                filterParams[fieldMappings[key]] = value;
+        // Process price filters first
+        if (formValues.min_price) {
+            filterParams['%3EufCrm5Price'] = formValues.min_price; // Manually encoded >
+        }
+        if (formValues.max_price) {
+            filterParams['%3CufCrm5Price'] = formValues.max_price; // Manually encoded <
+        }
+
+        // Process other filters
+        for (const [key, value] of Object.entries(formValues)) {
+            if (key === 'min_price' || key === 'max_price') continue; // Skip already processed
+
+            if (fieldMappings[key]) {
+                const encodedKey = encodeURIComponent(fieldMappings[key]);
+                filterParams[encodedKey] = value;
             }
         }
 
-        // Handle special cases for "portal" field
-        if (filterParams['portal']) {
-            if (filterParams['portal'] == 'PF') {
-                filterParams['ufCrm5PfEnable'] = 1;
-            } else if (filterParams['portal'] == 'BAYUT') {
-                filterParams['ufCrm5BayutEnable'] = 1;
-            } else if (filterParams['portal'] == 'DUBIZZLE') {
-                filterParams['ufCrm5DubizzleEnable'] = 1;
-            } else if (filterParams['portal'] == 'WEBSITE') {
-                filterParams['ufCrm5WebsiteEnable'] = 1;
-            }
-            delete filterParams['portal'];
+        // Handle special portal filters
+        if (formValues.portal) {
+            const portalMap = {
+                'PF': 'ufCrm5PfEnable',
+                'BAYUT': 'ufCrm5BayutEnable',
+                'DUBIZZLE': 'ufCrm5DubizzleEnable',
+                'WEBSITE': 'ufCrm5WebsiteEnable'
+            };
+            filterParams[portalMap[formValues.portal]] = '1';
         }
 
-        // Handle special cases for "status" field
-        if (filterParams['status']) {
-            if (filterParams['status'] == 'PUBLISHED') {
-                filterParams['ufCrm5Status'] = 'PUBLISHED';
-            } else if (filterParams['status'] == 'UNPUBLISHED') {
-                filterParams['ufCrm5Status'] = 'UNPUBLISHED';
-            } else if (filterParams['status'] == 'LIVE') {
-                filterParams['ufCrm5Status'] = 'LIVE';
-            } else if (filterParams['status'] == 'DRAFT') {
-                filterParams['ufCrm5Status'] = 'DRAFT';
-            } else if (filterParams['status'] == 'ARCHIVED') {
-                filterParams['ufCrm5Status'] = 'ARCHIVED';
-            } else if (filterParams['status'] == 'POCKET') {
-                filterParams['ufCrm5Status'] = 'POCKET';
-            }
-            delete filterParams['status'];
+        // Handle status filter
+        if (formValues.status) {
+            filterParams['ufCrm5Status'] = formValues.status.toUpperCase();
         }
 
-        // Store the applied filters in localStorage
-        localStorage.setItem('appliedFilters', JSON.stringify(filterParams));
-
-        // Merge the modal filters with our global activeFilters.
+        // Apply filters
         setFilters(filterParams);
 
-        // Reset the form and close the modal
-        document.getElementById('filterForm').reset();
-        document.querySelector('button[data-bs-dismiss="modal"]').click();
+        // Reset form and close modal
+        form.reset();
+        document.querySelector('[data-bs-dismiss="modal"]').click();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
