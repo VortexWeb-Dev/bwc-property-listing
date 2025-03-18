@@ -11,7 +11,6 @@
 
             <div class="modal-body px-6 py-4">
                 <form id="filterForm" method="GET" action="index.php" onsubmit="prepareFilters(event);">
-                    <!-- Location Search -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div>
                             <label for="city" class="block text-sm font-medium mb-2">City</label>
@@ -35,7 +34,6 @@
                         </div>
                     </div>
 
-                    <!-- Filter Fields -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div>
                             <label for="reference" class="block text-sm font-medium mb-2">Ref. ID</label>
@@ -87,7 +85,6 @@
                         </div>
                     </div>
 
-                    <!-- Additional Filters -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div>
                             <label for="portal" class="block text-sm font-medium mb-2">Portal</label>
@@ -127,7 +124,6 @@
                         </div>
                     </div>
 
-                    <!-- Additional Filters (Continued) -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div>
                             <label for="listing_owner" class="block text-sm font-medium mb-2">Listing Owner</label>
@@ -163,7 +159,6 @@
                         </div>
                     </div>
 
-                    <!-- Final Filters -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div class="max-w-sm">
                             <label for="bathrooms" class="block text-sm font-medium mb-2">No. of Bathrooms</label>
@@ -172,6 +167,18 @@
                         <div>
                             <label for="price" class="block text-sm font-medium mb-2">Price</label>
                             <input type="number" step="0.01" id="price" name="price" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                        </div>
+                        <div>
+                            <label for="min_price" class="block text-sm font-medium mb-2">Min Price</label>
+                            <input type="number" step="0.01" id="min_price" name="min_price"
+                                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                placeholder="Min price">
+                        </div>
+                        <div>
+                            <label for="max_price" class="block text-sm font-medium mb-2">Max Price</label>
+                            <input type="number" step="0.01" id="max_price" name="max_price"
+                                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                placeholder="Max price">
                         </div>
                         <div>
                             <label for="developer" class="block text-sm font-medium mb-2">Developer</label>
@@ -200,6 +207,15 @@
         const formData = new FormData(form);
         const params = new URLSearchParams();
 
+        // Remove empty values and convert to object
+        const formValues = Object.fromEntries([...formData.entries()].filter(([_, v]) => v));
+
+        // Handle price range conflicts
+        if (formValues.price && (formValues.min_price || formValues.max_price)) {
+            alert('Please use either exact price OR price range, not both');
+            return;
+        }
+
         // Build URLSearchParams from non-empty fields
         for (const [key, value] of formData.entries()) {
             if (value != null && value != "") {
@@ -226,6 +242,8 @@
             'bedrooms': 'ufCrm5Bedroom',
             'bathrooms': 'ufCrm5Bathroom',
             'price': 'ufCrm5Price',
+            'min_price': '>=ufCrm5Price',
+            'max_price': '<=ufCrm5Price',
             'portal': 'portal',
             'status': 'status'
         };
@@ -271,6 +289,9 @@
             delete filterParams['status'];
         }
 
+        // Store the applied filters in localStorage
+        localStorage.setItem('appliedFilters', JSON.stringify(filterParams));
+
         // Merge the modal filters with our global activeFilters.
         setFilters(filterParams);
 
@@ -301,7 +322,7 @@
                 return data.result.items;
             } catch (error) {
                 console.error('Error fetching agents:', error);
-                return [];
+                return;
             }
         };
 
@@ -320,7 +341,7 @@
                 return developers;
             } catch (error) {
                 console.error('Error fetching developers:', error);
-                return [];
+                return;
             }
         };
 
@@ -353,7 +374,7 @@
                     .sort((a, b) => a.NAME.localeCompare(b.NAME));
             } catch (error) {
                 console.error('Error fetching owners:', error);
-                return [];
+                return;
             }
         };
 
