@@ -266,7 +266,7 @@ if ($isAdmin) {
         } else if (direction === 'next' && currentPage < totalPages) {
             currentPage++;
         }
-        fetchProperties(currentPage);
+        fetchProperties(currentPage, activeFilters);
     }
 
     function formatPrice(amount, locale = 'en-US', currency = 'AED') {
@@ -299,25 +299,16 @@ if ($isAdmin) {
         }
     }
 
-    // Initialize filter state
-    let savedFilter = localStorage.getItem('listingFilter');
-    if (!savedFilter) {
-        savedFilter = 'PUBLISHED'; // Default to PUBLISHED
-        localStorage.setItem('listingFilter', savedFilter);
-    }
-
-    // Build initial filters
-    let initialFilters = null;
-    if (savedFilter === 'PF') {
-        initialFilters = {
-            'ufCrm5PfEnable': 'Y'
-        };
-    } else if (savedFilter !== 'ALL') {
-        initialFilters = {
-            'ufCrm5Status': savedFilter
-        };
-    }
-
-    // Fetch properties with initial filter
-    fetchProperties(currentPage, initialFilters);
+   // Modified initialization
+    document.addEventListener('DOMContentLoaded', () => {
+        // Load persisted filters
+        const savedFilters = JSON.parse(localStorage.getItem('activeFilters')) || {};
+        
+        // Apply default published filter if no status exists
+        if (!savedFilters.ufCrm5Status && !savedFilters['>ufCrm5Price'] && !savedFilters['<ufCrm5Price']) {
+            savedFilters.ufCrm5Status = 'PUBLISHED';
+        }
+        
+        fetchProperties(currentPage, savedFilters);
+    });
 </script>

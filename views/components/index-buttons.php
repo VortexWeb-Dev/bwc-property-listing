@@ -124,36 +124,23 @@
 
 <script>
   function filterProperties(filterKey) {
-    localStorage.setItem('listingFilter', filterKey);
-    updateDropdownText(); // Update button text
+    const newFilters = {};
 
-    const filterLabels = {
-      'ALL': 'All Listings',
-      'DRAFT': 'Draft',
-      'POCKET': 'Pocket Listings',
-      'PUBLISHED': 'Published',
-      'LIVE': 'Live',
-      'PENDING': 'Pending',
-      'ARCHIVED': 'Archived',
-      'DUPLICATE': 'Duplicate',
-    };
-
-    // Update button text to reflect the selected filter
-    document.querySelector('.btn.btn-filter').innerText = filterLabels[filterKey] || 'Select Filter';
-
-    // Update API filters
     if (filterKey === 'ALL') {
-      updateFilter('ufCrm5Status', '');
+      delete activeFilters.ufCrm5Status;
     } else if (filterKey === 'PF') {
-      updateFilter('ufCrm5PfEnable', 'Y');
+      newFilters.ufCrm5PfEnable = 'Y';
     } else {
-      updateFilter('ufCrm5Status', filterKey);
+      newFilters.ufCrm5Status = filterKey;
     }
+
+    setFilters(newFilters);
+    localStorage.setItem('listingFilter', filterKey);
+    updateDropdownText();
   }
 
-  // Update dropdown text on page load
   function updateDropdownText() {
-    const savedFilter = localStorage.getItem('listingFilter') || 'PUBLISHED';
+    const statusFilter = activeFilters.ufCrm5Status || 'PUBLISHED';
     const filterLabels = {
       'ALL': 'All Listings',
       'POCKET': 'Pocket Listings',
@@ -164,12 +151,8 @@
       'ARCHIVED': 'Archived',
       'DUPLICATE': 'Duplicate',
     };
-    const label = filterLabels[savedFilter] || 'Select Filter';
-    document.querySelector('.btn.btn-filter').innerText = label;
+    document.querySelector('.btn.btn-filter').innerText = filterLabels[statusFilter] || 'Select Filter';
   }
-
-  // Call this on page load
-  updateDropdownText();
 </script>
 
 <!-- <script>

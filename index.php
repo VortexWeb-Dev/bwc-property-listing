@@ -44,49 +44,61 @@ if (!array_key_exists($page, $pages)) {
 
 <script>
     // Global filter state – holds all active filters
-    let activeFilters = {};
+    let activeFilters = JSON.parse(localStorage.getItem('activeFilters')) || {};
 
-    // Call this function whenever you want to update (or add/remove) a single filter.
+    // Initialize with default published filter if empty
+    if (Object.keys(activeFilters).length === 0) {
+        activeFilters = {
+            'ufCrm5Status': 'PUBLISHED'
+        };
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+    }
+
     function updateFilter(key, value) {
-        // Remove filter if value is empty, null, or 'ALL'
         if (value === '' || value === null || value === 'ALL') {
             delete activeFilters[key];
         } else {
             activeFilters[key] = value;
         }
-        // Call fetchProperties with all active filters
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
         fetchProperties(currentPage, activeFilters);
-        // Show/hide the clear filters button based on active filters
-        if (Object.keys(activeFilters).length > 0) {
-            document.querySelector('#clearFiltersBtn').classList.remove('d-none');
-        } else {
-            document.querySelector('#clearFiltersBtn').classList.add('d-none');
-        }
+        toggleClearFiltersButton();
     }
 
-    // Merge multiple filters at once (used by the modal)
     function setFilters(newFilters) {
-        activeFilters = Object.assign({}, activeFilters, newFilters);
-        // Remove any keys that have empty values
-        for (let key in activeFilters) {
-            if (activeFilters[key] === '' || activeFilters[key] === null || activeFilters[key] === 'ALL') {
+        activeFilters = {
+            ...activeFilters,
+            ...newFilters
+        };
+        // Clean empty values
+        Object.keys(activeFilters).forEach(key => {
+            if (!activeFilters[key] || activeFilters[key] === 'ALL') {
                 delete activeFilters[key];
             }
-        }
+        });
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
         fetchProperties(currentPage, activeFilters);
-        if (Object.keys(activeFilters).length > 0) {
-            document.querySelector('#clearFiltersBtn').classList.remove('d-none');
-        } else {
-            document.querySelector('#clearFiltersBtn').classList.add('d-none');
-        }
+        toggleClearFiltersButton();
     }
 
-    // Clear all active filters
     function clearAllFilters() {
-        activeFilters = {};
-        fetchProperties(currentPage);
+        // Reset to default published filter
+        activeFilters = {
+            'ufCrm5Status': 'PUBLISHED'
+        };
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+        fetchProperties(currentPage, activeFilters);
         document.querySelector('#clearFiltersBtn').classList.add('d-none');
-        // Optionally: reset UI elements (dropdowns, form fields, etc.)
+        // Reset filter dropdown
+        localStorage.setItem('listingFilter', 'PUBLISHED');
+        updateDropdownText();
+    }
+
+    function toggleClearFiltersButton() {
+        const hasNonDefaultFilters = Object.keys(activeFilters).length > 1 ||
+            (Object.keys(activeFilters).length === 1 &&
+                !activeFilters.hasOwnProperty('ufCrm5Status'));
+        document.querySelector('#clearFiltersBtn').classList.toggle('d-none', !hasNonDefaultFilters);
     }
 </script>
 

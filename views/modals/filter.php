@@ -202,12 +202,8 @@
 <script>
     function prepareFilters(e) {
         e.preventDefault();
-
         const form = document.getElementById('filterForm');
         const formData = new FormData(form);
-        const params = new URLSearchParams();
-
-        // Convert FormData to object and remove empty values
         const formValues = Object.fromEntries([...formData.entries()].filter(([_, v]) => v));
 
         // Handle price conflicts
@@ -215,6 +211,9 @@
             alert('Please use either exact price OR price range, not both');
             return;
         }
+
+        // Convert form values to API filters
+        const newFilters = {};
 
         // Build URLSearchParams with proper encoding
         const fieldMappings = {
@@ -240,6 +239,12 @@
             'portal': 'portal',
             'status': 'status'
         };
+
+        Object.entries(formValues).forEach(([key, value]) => {
+            if (fieldMappings[key]) {
+                newFilters[fieldMappings[key]] = value;
+            }
+        });
 
         let filterParams = {};
 
