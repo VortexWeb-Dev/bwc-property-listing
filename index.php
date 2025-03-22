@@ -49,16 +49,17 @@ if (!array_key_exists($page, $pages)) {
     // Initialize with default published filter if empty
     if (Object.keys(activeFilters).length === 0) {
         activeFilters = {
-            'ufCrm5Status': 'PUBLISHED'
+            [encodeURIComponent('ufCrm5Status')]: 'PUBLISHED'
         };
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
     }
 
     function updateFilter(key, value) {
+        const encodedKey = encodeURIComponent(key);
         if (value === '' || value === null || value === 'ALL') {
-            delete activeFilters[key];
+            delete activeFilters[encodedKey];
         } else {
-            activeFilters[key] = value;
+            activeFilters[encodedKey] = value;
         }
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
         fetchProperties(currentPage, activeFilters);
@@ -66,38 +67,49 @@ if (!array_key_exists($page, $pages)) {
     }
 
     function setFilters(newFilters) {
+        // Merge filters with proper encoding
+        const encodedFilters = Object.fromEntries(
+            Object.entries(newFilters).map(([k, v]) => [encodeURIComponent(k), v])
+        );
+
         activeFilters = {
             ...activeFilters,
-            ...newFilters
+            ...encodedFilters
         };
+
         // Clean empty values
         Object.keys(activeFilters).forEach(key => {
             if (!activeFilters[key] || activeFilters[key] === 'ALL') {
                 delete activeFilters[key];
             }
         });
+
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
         fetchProperties(currentPage, activeFilters);
         toggleClearFiltersButton();
     }
 
     function clearAllFilters() {
-        // Reset to default published filter
+        // Completely reset filters
         activeFilters = {
-            'ufCrm5Status': 'PUBLISHED'
+            [encodeURIComponent('ufCrm5Status')]: 'PUBLISHED'
         };
+
+        // Clear localStorage properly
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
-        fetchProperties(currentPage, activeFilters);
+        localStorage.removeItem('listingFilter');
+
+        // Force reset to default state
+        fetchProperties(1, activeFilters);
         document.querySelector('#clearFiltersBtn').classList.add('d-none');
-        // Reset filter dropdown
-        localStorage.setItem('listingFilter', 'PUBLISHED');
         updateDropdownText();
     }
 
     function toggleClearFiltersButton() {
+        const statusKey = encodeURIComponent('ufCrm5Status');
         const hasNonDefaultFilters = Object.keys(activeFilters).length > 1 ||
-            (Object.keys(activeFilters).length === 1 &&
-                !activeFilters.hasOwnProperty('ufCrm5Status'));
+            (Object.keys(activeFilters).length === 1 && !activeFilters.hasOwnProperty(statusKey));
+
         document.querySelector('#clearFiltersBtn').classList.toggle('d-none', !hasNonDefaultFilters);
     }
 </script>

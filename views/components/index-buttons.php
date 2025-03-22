@@ -45,8 +45,9 @@
         <i class="fas fa-filter me-2"></i>Filters
       </button>
 
-      <a href="?page=properties" id="clearFiltersBtn" class="btn btn-secondary py-1.5 px-4 rounded-md d-none"><i class="fas fa-eraser me-2"></i> Clear Filters</a>
-
+      <a href="javascript:void(0)" onclick="clearAllFilters()" id="clearFiltersBtn" class="btn btn-secondary py-1.5 px-4 rounded-md d-none">
+        <i class="fas fa-eraser me-2"></i> Clear Filters
+      </a>
     </div>
   </div>
 
@@ -126,12 +127,16 @@
   function filterProperties(filterKey) {
     const newFilters = {};
 
+    // Clear existing portal filters when changing status
+    delete activeFilters[encodeURIComponent('ufCrm5PfEnable')];
+    delete activeFilters[encodeURIComponent('ufCrm5BayutEnable')];
+    delete activeFilters[encodeURIComponent('ufCrm5DubizzleEnable')];
+    delete activeFilters[encodeURIComponent('ufCrm5WebsiteEnable')];
+
     if (filterKey === 'ALL') {
-      delete activeFilters.ufCrm5Status;
-    } else if (filterKey === 'PF') {
-      newFilters.ufCrm5PfEnable = 'Y';
+      delete activeFilters[encodeURIComponent('ufCrm5Status')];
     } else {
-      newFilters.ufCrm5Status = filterKey;
+      newFilters[encodeURIComponent('ufCrm5Status')] = filterKey;
     }
 
     setFilters(newFilters);
@@ -140,7 +145,6 @@
   }
 
   function updateDropdownText() {
-    const statusFilter = activeFilters.ufCrm5Status || 'PUBLISHED';
     const filterLabels = {
       'ALL': 'All Listings',
       'POCKET': 'Pocket Listings',
@@ -151,51 +155,9 @@
       'ARCHIVED': 'Archived',
       'DUPLICATE': 'Duplicate',
     };
+
     document.querySelector('.btn.btn-filter').innerText = filterLabels[statusFilter] || 'Select Filter';
   }
+
+  document.addEventListener('DOMContentLoaded', updateDropdownText);
 </script>
-
-<!-- <script>
-  const savedFilter = localStorage.getItem('listingFilter') || 'ALL';
-  document.querySelectorAll('.dropdown-item').forEach(item => {
-    if (item.innerText === document.querySelector('.btn').innerText) {
-      item.classList.add('active');
-    }
-  });
-
-  function filterProperties(filterKey) {
-    localStorage.setItem('listingFilter', filterKey);
-
-    const filterLabels = {
-      'ALL': 'All Listings',
-      'DRAFT': 'Draft',
-      'POCKET': 'Pocket Listings',
-      'PUBLISHED': 'Published',
-      'LIVE': 'Live',
-      'PENDING': 'Pending',
-      'ARCHIVED': 'Archived',
-      'DUPLICATE': 'Duplicate',
-    };
-
-    document.querySelector('.btn.btn-filter').innerText = filterLabels[filterKey] || 'Select Filter';
-
-    document.querySelectorAll('.dropdown-item.filter-item').forEach(item => {
-      if (item.innerText === filterLabels[filterKey]) {
-        item.classList.add('active');
-      } else {
-        item.classList.remove('active');
-      }
-    });
-
-    if (filterKey === 'ALL') {
-      fetchProperties(currentPage);
-      return;
-    }
-
-    fetchProperties(currentPage, {
-      'ufCrm5Status': filterKey
-    });
-
-    document.querySelector('#clearFiltersBtn').classList.remove('d-none');
-  }
-</script> -->

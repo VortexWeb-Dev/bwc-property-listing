@@ -212,11 +212,10 @@
             return;
         }
 
-        // Convert form values to API filters
         const newFilters = {};
-
-        // Build URLSearchParams with proper encoding
         const fieldMappings = {
+            'min_price': '>ufCrm5Price',
+            'max_price': '<ufCrm5Price',
             'city': '%ufCrm5City',
             'community': '%ufCrm5Community',
             'subCommunity': '%ufCrm5SubCommunity',
@@ -234,39 +233,27 @@
             'bedrooms': 'ufCrm5Bedroom',
             'bathrooms': 'ufCrm5Bathroom',
             'price': 'ufCrm5Price',
-            'min_price': '>ufCrm5Price',
-            'max_price': '<ufCrm5Price',
             'portal': 'portal',
             'status': 'status'
         };
 
-        Object.entries(formValues).forEach(([key, value]) => {
-            if (fieldMappings[key]) {
-                newFilters[fieldMappings[key]] = value;
-            }
-        });
-
-        let filterParams = {};
-
-        // Process price filters first
+        // Process price range
         if (formValues.min_price) {
-            filterParams['%3EufCrm5Price'] = formValues.min_price; // Manually encoded >
+            newFilters[encodeURIComponent('>ufCrm5Price')] = formValues.min_price;
         }
         if (formValues.max_price) {
-            filterParams['%3CufCrm5Price'] = formValues.max_price; // Manually encoded <
+            newFilters[encodeURIComponent('<ufCrm5Price')] = formValues.max_price;
         }
 
         // Process other filters
-        for (const [key, value] of Object.entries(formValues)) {
-            if (key === 'min_price' || key === 'max_price') continue; // Skip already processed
-
+        Object.entries(formValues).forEach(([key, value]) => {
             if (fieldMappings[key]) {
                 const encodedKey = encodeURIComponent(fieldMappings[key]);
-                filterParams[encodedKey] = value;
+                newFilters[encodedKey] = value;
             }
-        }
+        });
 
-        // Handle special portal filters
+        // Handle portal filters
         if (formValues.portal) {
             const portalMap = {
                 'PF': 'ufCrm5PfEnable',
@@ -274,19 +261,12 @@
                 'DUBIZZLE': 'ufCrm5DubizzleEnable',
                 'WEBSITE': 'ufCrm5WebsiteEnable'
             };
-            filterParams[portalMap[formValues.portal]] = '1';
+            // Clear existing portal filters
+            Object.values(portalMap).forEach(p => delete newFilters[encodeURIComponent(p)]);
+            newFilters[encodeURIComponent(portalMap[formValues.portal])] = '1';
         }
 
-        // Handle status filter
-        if (formValues.status) {
-            filterParams['ufCrm5Status'] = formValues.status.toUpperCase();
-        }
-
-        // Apply filters
-        setFilters(filterParams);
-
-        // Reset form and close modal
-        form.reset();
+        setFilters(newFilters);
         document.querySelector('[data-bs-dismiss="modal"]').click();
     }
 

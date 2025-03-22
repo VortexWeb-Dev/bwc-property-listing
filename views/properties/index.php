@@ -299,16 +299,16 @@ if ($isAdmin) {
         }
     }
 
-   // Modified initialization
     document.addEventListener('DOMContentLoaded', () => {
         // Load persisted filters
         const savedFilters = JSON.parse(localStorage.getItem('activeFilters')) || {};
-        
-        // Apply default published filter if no status exists
-        if (!savedFilters.ufCrm5Status && !savedFilters['>ufCrm5Price'] && !savedFilters['<ufCrm5Price']) {
-            savedFilters.ufCrm5Status = 'PUBLISHED';
+
+        // Apply default published filter if empty
+        if (!Object.keys(savedFilters).length) {
+            savedFilters[encodeURIComponent('ufCrm5Status')] = 'PUBLISHED';
+            localStorage.setItem('activeFilters', JSON.stringify(savedFilters));
         }
-        
+
         fetchProperties(currentPage, savedFilters);
     });
 </script>
