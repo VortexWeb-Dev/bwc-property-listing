@@ -14,17 +14,17 @@
           'ARCHIVED' => 'Archived',
           'DUPLICATE' => 'Duplicate',
         ];
-        $currentFilter = $filter ?? 'PUBLISHED'; // Default to PUBLISHED
-        $currentFilterLabel = $filterLabels[$currentFilter] ?? 'Select Filter';
+        // $currentFilter = $filter ?? 'PUBLISHED'; // Default to PUBLISHED
+        // $currentFilterLabel = $filterLabels[$currentFilter] ?? 'Select Filter';
         ?>
-        <button
-          class="btn btn-filter btn-outline-primary dropdown-toggle w-100"
+        <button class="btn btn-filter btn-outline-primary dropdown-toggle w-100"
           type="button"
           id="filterDropdown"
           data-bs-toggle="dropdown"
           aria-expanded="false"
           style="background-color: white; color: var(--bs-primary); border-color: var(--bs-primary);">
-          <?= $currentFilterLabel ?>
+          <!-- Text will be updated by JavaScript -->
+          Select Filter
         </button>
         <ul class="dropdown-menu w-100" aria-labelledby="filterDropdown">
           <?php foreach ($filterLabels as $key => $label): ?>
@@ -135,6 +135,8 @@
 
     if (filterKey === 'ALL') {
       delete activeFilters[encodeURIComponent('ufCrm5Status')];
+    } else if (filterKey === 'PF') {
+      newFilters[encodeURIComponent('ufCrm5PfEnable')] = 'Y';
     } else {
       newFilters[encodeURIComponent('ufCrm5Status')] = filterKey;
     }
@@ -145,8 +147,23 @@
   }
 
   function updateDropdownText() {
+    const statusKey = encodeURIComponent('ufCrm5Status');
+    const pfKey = encodeURIComponent('ufCrm5PfEnable');
+
+    // Determine current filter state
+    let currentFilter = 'PUBLISHED'; // Default
+
+    if (activeFilters[pfKey] === 'Y') {
+      currentFilter = 'PF';
+    } else if (!activeFilters[statusKey] && Object.keys(activeFilters).length === 0) {
+      currentFilter = 'ALL';
+    } else if (activeFilters[statusKey]) {
+      currentFilter = activeFilters[statusKey];
+    }
+
     const filterLabels = {
       'ALL': 'All Listings',
+      'PF': 'PF Listings',
       'POCKET': 'Pocket Listings',
       'DRAFT': 'Draft',
       'PUBLISHED': 'Published',
@@ -156,8 +173,10 @@
       'DUPLICATE': 'Duplicate',
     };
 
-    document.querySelector('.btn.btn-filter').innerText = filterLabels[statusFilter] || 'Select Filter';
+    const button = document.querySelector('.btn.btn-filter');
+    button.innerText = filterLabels[currentFilter] || 'Select Filter';
   }
 
+  // Initialize dropdown text on load and after filter changes
   document.addEventListener('DOMContentLoaded', updateDropdownText);
 </script>
