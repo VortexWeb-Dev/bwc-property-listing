@@ -239,17 +239,17 @@
 
         // Process price range
         if (formValues.min_price) {
-            newFilters[encodeURIComponent('>ufCrm5Price')] = formValues.min_price;
+            newFilters['>ufCrm5Price'] = formValues.min_price;
         }
         if (formValues.max_price) {
-            newFilters[encodeURIComponent('<ufCrm5Price')] = formValues.max_price;
+            newFilters['<ufCrm5Price'] = formValues.max_price;
         }
 
         // Process other filters
         Object.entries(formValues).forEach(([key, value]) => {
             if (fieldMappings[key]) {
-                const encodedKey = encodeURIComponent(fieldMappings[key]);
-                newFilters[encodedKey] = value;
+                // Don't encode the key here - we'll handle it in setFilters if needed
+                newFilters[fieldMappings[key]] = value;
             }
         });
 
@@ -262,8 +262,8 @@
                 'WEBSITE': 'ufCrm5WebsiteEnable'
             };
             // Clear existing portal filters
-            Object.values(portalMap).forEach(p => delete newFilters[encodeURIComponent(p)]);
-            newFilters[encodeURIComponent(portalMap[formValues.portal])] = '1';
+            Object.values(portalMap).forEach(p => delete newFilters[p]);
+            newFilters[portalMap[formValues.portal]] = '1';
         }
 
         setFilters(newFilters);
@@ -330,14 +330,12 @@
                     })));
                 }
 
-
                 const agents = await fetchAgents();
                 agents.forEach(agent => {
                     owners.push({
                         NAME: agent.ufCrm7AgentName
                     });
                 });
-
 
                 return [...new Set(owners.map(owner => owner.NAME))]
                     .map(NAME => owners.find(owner => owner.NAME === NAME))
@@ -350,13 +348,11 @@
 
         const fetchAndDisplayOptions = async () => {
             try {
-
                 const [agents, developers, owners] = await Promise.all([
                     fetchAgents(),
                     fetchDevelopers(),
                     fetchOwners()
                 ]);
-
 
                 createSelectOptions(agents, listingAgentSelect, 'ufCrm7AgentName', 'ufCrm7AgentName');
                 createSelectOptions(developers, developerSelect, 'ufCrm13DeveloperName', 'ufCrm13DeveloperName');
