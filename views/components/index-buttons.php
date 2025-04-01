@@ -55,25 +55,6 @@
     <!-- Create Listing Button -->
     <a href="?page=add-property" class="btn btn-primary py-1.5 px-4 rounded-md"><i class="fas fa-plus me-2"></i>Create Listing</a>
 
-    <!-- XML Publish Dropdown -->
-    <!-- <div class="admin-only dropdown me-2">
-      <button
-        class="btn btn-outline-primary dropdown-toggle w-100"
-        type="button"
-        id="xmlPublishDropdown"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-        style="background-color: white; color: var(--bs-primary); border-color: var(--bs-primary);">
-        XML Publish
-      </button>
-      <ul class="dropdown-menu w-100 mt-2 border border-gray-300 bg-white shadow" aria-labelledby="xmlPublishDropdown">
-        <li><a class="dropdown-item" href="pf-xml.php">PF</a></li>
-        <li><a class="dropdown-item" href="bayut-xml.php">Bayut</a></li>
-        <li><a class="dropdown-item" href="dubizzle-xml.php">Dubizzle</a></li>
-        <li><a class="dropdown-item" href="website-xml.php">Website</a></li>
-      </ul>
-    </div> -->
-
     <!-- Bulk Actions Dropdown -->
     <div class="relative">
       <button class="btn btn-secondary py-1.5 px-4 rounded-md bg-secondary text-white dropdown-toggle"
@@ -124,27 +105,62 @@
 </div>
 
 <script>
+   // Add this function to check filter state
+   function checkFilterState() {
+    updateDropdownText();
+    toggleClearButton();
+  }
+
+  // Updated function to toggle clear button
+  function toggleClearButton() {
+    const clearBtn = document.getElementById('clearFiltersBtn');
+    
+    // Check if there are any keys besides ufCrm5Status
+    const hasAdditionalFilters = Object.keys(activeFilters).some(
+      key => key !== 'ufCrm5Status'
+    );
+
+    clearBtn.classList.toggle('d-none', !hasAdditionalFilters);
+  }
+
+  // Modified filterProperties function
   function filterProperties(filterKey) {
     const newFilters = {};
 
     // Clear existing portal filters when changing status
-    delete activeFilters[encodeURIComponent('ufCrm5PfEnable')];
-    delete activeFilters[encodeURIComponent('ufCrm5BayutEnable')];
-    delete activeFilters[encodeURIComponent('ufCrm5DubizzleEnable')];
-    delete activeFilters[encodeURIComponent('ufCrm5WebsiteEnable')];
+    delete activeFilters['ufCrm5PfEnable'];
+    delete activeFilters['ufCrm5BayutEnable'];
+    delete activeFilters['ufCrm5DubizzleEnable'];
+    delete activeFilters['ufCrm5WebsiteEnable'];
 
     if (filterKey === 'ALL') {
-      delete activeFilters[encodeURIComponent('ufCrm5Status')];
+      delete activeFilters['ufCrm5Status'];
     } else if (filterKey === 'PF') {
-      newFilters[encodeURIComponent('ufCrm5PfEnable')] = 'Y';
+      newFilters['ufCrm5PfEnable'] = 'Y';
     } else {
-      newFilters[encodeURIComponent('ufCrm5Status')] = filterKey;
+      newFilters['ufCrm5Status'] = filterKey;
     }
 
     setFilters(newFilters);
     localStorage.setItem('listingFilter', filterKey);
-    updateDropdownText();
+    checkFilterState();
   }
+
+  // Update your clearAllFilters function
+  function clearAllFilters() {
+    // Keep only the status filter if it exists
+    const statusValue = activeFilters['ufCrm5Status'];
+    activeFilters = statusValue ? { 'ufCrm5Status': statusValue } : {};
+    setFilters(activeFilters);
+    checkFilterState();
+  }
+
+  // Update event listener to check filters on load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize activeFilters from localStorage
+    activeFilters = JSON.parse(localStorage.getItem('activeFilters') || '{}');
+    checkFilterState();
+  });
 
   function updateDropdownText() {
     const statusKey = encodeURIComponent('ufCrm5Status');
