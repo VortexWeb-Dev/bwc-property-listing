@@ -81,6 +81,7 @@
         <li class="admin-only"><button class="dropdown-item px-4 py-2 w-full text-left truncate" type="button" onclick="handleBulkAction('publish', 'bayut')"><i class="fas fa-building me-2"></i>Publish To Bayut</button></li>
         <li class="admin-only"><button class="dropdown-item px-4 py-2 w-full text-left truncate" type="button" onclick="handleBulkAction('publish', 'dubizzle')"><i class="fas fa-home me-2"></i>Publish To Dubizzle</button></li>
         <li class="admin-only"><button class="dropdown-item px-4 py-2 w-full text-left truncate" type="button" onclick="handleBulkAction('publish', 'website')"><i class="fas fa-globe me-2"></i>Publish To Website</button></li>
+        <li class="admin-only"><button class="dropdown-item px-4 py-2 w-full text-left truncate" type="button" onclick="handleBulkAction('live')"><i class="fas fa-arrow-trend-up me-2"></i>Make Live</button></li>
         <li class="admin-only">
           <hr class="dropdown-divider">
         </li>
@@ -105,8 +106,8 @@
 </div>
 
 <script>
-   // Add this function to check filter state
-   function checkFilterState() {
+  // Add this function to check filter state
+  function checkFilterState() {
     updateDropdownText();
     toggleClearButton();
   }
@@ -114,7 +115,7 @@
   // Updated function to toggle clear button
   function toggleClearButton() {
     const clearBtn = document.getElementById('clearFiltersBtn');
-    
+
     // Check if there are any keys besides ufCrm5Status
     const hasAdditionalFilters = Object.keys(activeFilters).some(
       key => key !== 'ufCrm5Status'
@@ -150,7 +151,9 @@
   function clearAllFilters() {
     // Keep only the status filter if it exists
     const statusValue = activeFilters['ufCrm5Status'];
-    activeFilters = statusValue ? { 'ufCrm5Status': statusValue } : {};
+    activeFilters = statusValue ? {
+      'ufCrm5Status': statusValue
+    } : {};
     setFilters(activeFilters);
     checkFilterState();
   }
