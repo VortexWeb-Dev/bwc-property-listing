@@ -161,6 +161,7 @@ if ($isAdmin) {
                                 <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'bayut')"><i class="fa-solid fa-building me-2"></i>Publish to Bayut</button></li>
                                 <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'dubizzle')"><i class="fa-solid fa-home me-2"></i>Publish to Dubizzle</button></li>
                                 <li><button class="dropdown-item" onclick="handleAction('publish', ${property.id}, 'website')"><i class="fa-solid fa-globe me-2"></i>Publish to Website</button></li>
+                                <li><button class="dropdown-item" onclick="handleAction('live', ${property.id})"><i class="fa-solid fa-arrow-trend-up me-2"></i>Make Live</button></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id})"><i class="fa-solid fa-archive me-2"></i>Unpublish from all</button></li>
                                 <li><button class="dropdown-item" onclick="handleAction('unpublish', ${property.id}, 'pf')"><i class="fa-solid fa-search me-2"></i>Unpublish from PF</button></li>
@@ -266,7 +267,7 @@ if ($isAdmin) {
         } else if (direction === 'next' && currentPage < totalPages) {
             currentPage++;
         }
-        fetchProperties(currentPage);
+        fetchProperties(currentPage, activeFilters);
     }
 
     function formatPrice(amount, locale = 'en-US', currency = 'AED') {
@@ -299,5 +300,16 @@ if ($isAdmin) {
         }
     }
 
-    fetchProperties(currentPage);
+    document.addEventListener('DOMContentLoaded', () => {
+        // Load persisted filters
+        const savedFilters = JSON.parse(localStorage.getItem('activeFilters')) || {};
+
+        // Apply default published filter if empty
+        if (!Object.keys(savedFilters).length) {
+            savedFilters[encodeURIComponent('ufCrm5Status')] = 'PUBLISHED';
+            localStorage.setItem('activeFilters', JSON.stringify(savedFilters));
+        }
+
+        fetchProperties(currentPage, savedFilters);
+    });
 </script>

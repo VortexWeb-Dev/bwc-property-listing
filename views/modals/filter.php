@@ -11,7 +11,6 @@
 
             <div class="modal-body px-6 py-4">
                 <form id="filterForm" method="GET" action="index.php" onsubmit="prepareFilters(event);">
-                    <!-- Location Search -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div>
                             <label for="city" class="block text-sm font-medium mb-2">City</label>
@@ -35,7 +34,6 @@
                         </div>
                     </div>
 
-                    <!-- Filter Fields -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div>
                             <label for="reference" class="block text-sm font-medium mb-2">Ref. ID</label>
@@ -87,7 +85,6 @@
                         </div>
                     </div>
 
-                    <!-- Additional Filters -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div>
                             <label for="portal" class="block text-sm font-medium mb-2">Portal</label>
@@ -127,7 +124,6 @@
                         </div>
                     </div>
 
-                    <!-- Additional Filters (Continued) -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div>
                             <label for="listing_owner" class="block text-sm font-medium mb-2">Listing Owner</label>
@@ -163,7 +159,6 @@
                         </div>
                     </div>
 
-                    <!-- Final Filters -->
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div class="max-w-sm">
                             <label for="bathrooms" class="block text-sm font-medium mb-2">No. of Bathrooms</label>
@@ -172,6 +167,18 @@
                         <div>
                             <label for="price" class="block text-sm font-medium mb-2">Price</label>
                             <input type="number" step="0.01" id="price" name="price" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                        </div>
+                        <div>
+                            <label for="min_price" class="block text-sm font-medium mb-2">Min Price</label>
+                            <input type="number" step="0.01" id="min_price" name="min_price"
+                                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                placeholder="Min price">
+                        </div>
+                        <div>
+                            <label for="max_price" class="block text-sm font-medium mb-2">Max Price</label>
+                            <input type="number" step="0.01" id="max_price" name="max_price"
+                                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                placeholder="Max price">
                         </div>
                         <div>
                             <label for="developer" class="block text-sm font-medium mb-2">Developer</label>
@@ -195,20 +202,20 @@
 <script>
     function prepareFilters(e) {
         e.preventDefault();
-
         const form = document.getElementById('filterForm');
         const formData = new FormData(form);
-        const params = new URLSearchParams();
+        const formValues = Object.fromEntries([...formData.entries()].filter(([_, v]) => v));
 
-        // Build URLSearchParams from non-empty fields
-        for (const [key, value] of formData.entries()) {
-            if (value != null && value != "") {
-                params.append(key, value);
-            }
+        // Handle price conflicts
+        if (formValues.price && (formValues.min_price || formValues.max_price)) {
+            alert('Please use either exact price OR price range, not both');
+            return;
         }
 
-        // Mapping form field names to API field names
+        const newFilters = {};
         const fieldMappings = {
+            'min_price': '>ufCrm5Price',
+            'max_price': '<ufCrm5Price',
             'city': '%ufCrm5City',
             'community': '%ufCrm5Community',
             'subCommunity': '%ufCrm5SubCommunity',
@@ -230,53 +237,37 @@
             'status': 'status'
         };
 
-        let filterParams = {};
-
-        // Remap the form values to the proper filter parameters
-        for (const [key, value] of params) {
-            if (key in fieldMappings) {
-                filterParams[fieldMappings[key]] = value;
-            }
+        // Process price range
+        if (formValues.min_price) {
+            newFilters['>ufCrm5Price'] = formValues.min_price;
+        }
+        if (formValues.max_price) {
+            newFilters['<ufCrm5Price'] = formValues.max_price;
         }
 
-        // Handle special cases for "portal" field
-        if (filterParams['portal']) {
-            if (filterParams['portal'] == 'PF') {
-                filterParams['ufCrm5PfEnable'] = 1;
-            } else if (filterParams['portal'] == 'BAYUT') {
-                filterParams['ufCrm5BayutEnable'] = 1;
-            } else if (filterParams['portal'] == 'DUBIZZLE') {
-                filterParams['ufCrm5DubizzleEnable'] = 1;
-            } else if (filterParams['portal'] == 'WEBSITE') {
-                filterParams['ufCrm5WebsiteEnable'] = 1;
+        // Process other filters
+        Object.entries(formValues).forEach(([key, value]) => {
+            if (fieldMappings[key]) {
+                // Don't encode the key here - we'll handle it in setFilters if needed
+                newFilters[fieldMappings[key]] = value;
             }
-            delete filterParams['portal'];
+        });
+
+        // Handle portal filters
+        if (formValues.portal) {
+            const portalMap = {
+                'PF': 'ufCrm5PfEnable',
+                'BAYUT': 'ufCrm5BayutEnable',
+                'DUBIZZLE': 'ufCrm5DubizzleEnable',
+                'WEBSITE': 'ufCrm5WebsiteEnable'
+            };
+            // Clear existing portal filters
+            Object.values(portalMap).forEach(p => delete newFilters[p]);
+            newFilters[portalMap[formValues.portal]] = '1';
         }
 
-        // Handle special cases for "status" field
-        if (filterParams['status']) {
-            if (filterParams['status'] == 'PUBLISHED') {
-                filterParams['ufCrm5Status'] = 'PUBLISHED';
-            } else if (filterParams['status'] == 'UNPUBLISHED') {
-                filterParams['ufCrm5Status'] = 'UNPUBLISHED';
-            } else if (filterParams['status'] == 'LIVE') {
-                filterParams['ufCrm5Status'] = 'LIVE';
-            } else if (filterParams['status'] == 'DRAFT') {
-                filterParams['ufCrm5Status'] = 'DRAFT';
-            } else if (filterParams['status'] == 'ARCHIVED') {
-                filterParams['ufCrm5Status'] = 'ARCHIVED';
-            } else if (filterParams['status'] == 'POCKET') {
-                filterParams['ufCrm5Status'] = 'POCKET';
-            }
-            delete filterParams['status'];
-        }
-
-        // Merge the modal filters with our global activeFilters.
-        setFilters(filterParams);
-
-        // Reset the form and close the modal
-        document.getElementById('filterForm').reset();
-        document.querySelector('button[data-bs-dismiss="modal"]').click();
+        setFilters(newFilters);
+        document.querySelector('[data-bs-dismiss="modal"]').click();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -301,7 +292,7 @@
                 return data.result.items;
             } catch (error) {
                 console.error('Error fetching agents:', error);
-                return [];
+                return;
             }
         };
 
@@ -320,7 +311,7 @@
                 return developers;
             } catch (error) {
                 console.error('Error fetching developers:', error);
-                return [];
+                return;
             }
         };
 
@@ -339,7 +330,6 @@
                     })));
                 }
 
-
                 const agents = await fetchAgents();
                 agents.forEach(agent => {
                     owners.push({
@@ -347,25 +337,22 @@
                     });
                 });
 
-
                 return [...new Set(owners.map(owner => owner.NAME))]
                     .map(NAME => owners.find(owner => owner.NAME === NAME))
                     .sort((a, b) => a.NAME.localeCompare(b.NAME));
             } catch (error) {
                 console.error('Error fetching owners:', error);
-                return [];
+                return;
             }
         };
 
         const fetchAndDisplayOptions = async () => {
             try {
-
                 const [agents, developers, owners] = await Promise.all([
                     fetchAgents(),
                     fetchDevelopers(),
                     fetchOwners()
                 ]);
-
 
                 createSelectOptions(agents, listingAgentSelect, 'ufCrm7AgentName', 'ufCrm7AgentName');
                 createSelectOptions(developers, developerSelect, 'ufCrm13DeveloperName', 'ufCrm13DeveloperName');

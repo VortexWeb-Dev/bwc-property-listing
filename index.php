@@ -44,49 +44,73 @@ if (!array_key_exists($page, $pages)) {
 
 <script>
     // Global filter state – holds all active filters
-    let activeFilters = {};
+    let activeFilters = JSON.parse(localStorage.getItem('activeFilters')) || {};
 
-    // Call this function whenever you want to update (or add/remove) a single filter.
-    function updateFilter(key, value) {
-        // Remove filter if value is empty, null, or 'ALL'
-        if (value === '' || value === null || value === 'ALL') {
-            delete activeFilters[key];
-        } else {
-            activeFilters[key] = value;
-        }
-        // Call fetchProperties with all active filters
-        fetchProperties(currentPage, activeFilters);
-        // Show/hide the clear filters button based on active filters
-        if (Object.keys(activeFilters).length > 0) {
-            document.querySelector('#clearFiltersBtn').classList.remove('d-none');
-        } else {
-            document.querySelector('#clearFiltersBtn').classList.add('d-none');
-        }
+    // Initialize with default published filter if empty
+    if (Object.keys(activeFilters).length === 0) {
+        activeFilters = {
+            [encodeURIComponent('ufCrm5Status')]: 'PUBLISHED'
+        };
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
     }
 
-    // Merge multiple filters at once (used by the modal)
+    function updateFilter(key, value) {
+        const encodedKey = encodeURIComponent(key);
+        if (value === '' || value === null || value === 'ALL') {
+            delete activeFilters[encodedKey];
+        } else {
+            activeFilters[encodedKey] = value;
+        }
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+        fetchProperties(currentPage, activeFilters);
+        toggleClearFiltersButton();
+    }
+
     function setFilters(newFilters) {
-        activeFilters = Object.assign({}, activeFilters, newFilters);
-        // Remove any keys that have empty values
-        for (let key in activeFilters) {
-            if (activeFilters[key] === '' || activeFilters[key] === null || activeFilters[key] === 'ALL') {
+        // Merge filters with proper encoding
+        const encodedFilters = Object.fromEntries(
+            Object.entries(newFilters).map(([k, v]) => [encodeURIComponent(k), v])
+        );
+
+        activeFilters = {
+            ...activeFilters,
+            ...encodedFilters
+        };
+
+        // Clean empty values
+        Object.keys(activeFilters).forEach(key => {
+            if (!activeFilters[key] || activeFilters[key] === 'ALL') {
                 delete activeFilters[key];
             }
-        }
+        });
+
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
         fetchProperties(currentPage, activeFilters);
-        if (Object.keys(activeFilters).length > 0) {
-            document.querySelector('#clearFiltersBtn').classList.remove('d-none');
-        } else {
-            document.querySelector('#clearFiltersBtn').classList.add('d-none');
-        }
+        toggleClearFiltersButton();
     }
 
-    // Clear all active filters
     function clearAllFilters() {
-        activeFilters = {};
-        fetchProperties(currentPage);
+        // Completely reset filters
+        activeFilters = {
+            [encodeURIComponent('ufCrm5Status')]: 'PUBLISHED'
+        };
+
+        // Clear localStorage properly
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+        localStorage.removeItem('listingFilter');
+
+        // Force reset to default state
+        fetchProperties(1, activeFilters);
         document.querySelector('#clearFiltersBtn').classList.add('d-none');
-        // Optionally: reset UI elements (dropdowns, form fields, etc.)
+        updateDropdownText();
+    }
+
+    function toggleClearFiltersButton() {
+        const statusKey = encodeURIComponent('ufCrm5Status');
+        const hasNonDefaultFilters = Object.keys(activeFilters).length > 1 ||
+            (Object.keys(activeFilters).length === 1 && !activeFilters.hasOwnProperty(statusKey));
+
+        document.querySelector('#clearFiltersBtn').classList.toggle('d-none', !hasNonDefaultFilters);
     }
 </script>
 

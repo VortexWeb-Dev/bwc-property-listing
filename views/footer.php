@@ -200,6 +200,10 @@
                 }
                 break;
 
+            case 'live':
+                apiUrl = `${baseUrl}/crm.item.update?entityTypeId=1036&id=${propertyId}&fields[ufCrm5Status]=LIVE`;
+                break;
+
             case 'delete':
                 if (confirm('Are you sure you want to delete this property?')) {
                     try {
@@ -320,7 +324,7 @@
     }
 
     // Bulk action
-    async function handleBulkAction(action, platform) {
+    async function handleBulkAction(action, platform = null) {
         const checkboxes = document.querySelectorAll('input[name="property_ids[]"]:checked');
         const propertyIds = Array.from(checkboxes).map(checkbox => checkbox.value);
 
@@ -431,6 +435,8 @@
                         } else {
                             url += `&fields[ufCrm5PfEnable]=N&fields[ufCrm5BayutEnable]=N&fields[ufCrm5DubizzleEnable]=N&fields[ufCrm5WebsiteEnable]=N&fields[ufCrm5Status]=UNPUBLISHED`;
                         }
+                    } else if (action === 'live') {
+                        url += '&fields[ufCrm5Status]=LIVE';
                     } else if (action === 'archive') {
                         url += '&fields[ufCrm5Status]=ARCHIVED';
                     }
