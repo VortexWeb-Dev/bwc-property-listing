@@ -86,7 +86,6 @@ function getPropertyType($property)
         "DX" => "Duplex",
         "FF" => "Full floor",
         "HF" => "Half floor",
-        "LP" => "Land / Plot",
         "PH" => "Penthouse",
         "TH" => "Townhouse",
         "VH" => "Villa",
@@ -98,7 +97,7 @@ function getPropertyType($property)
         "FA" => "Factory",
         "OF" => "Office space",
         "RE" => "Retail",
-        "LP" => "Plot",
+        "LP" => $property['ufCrm5OfferingType'] == 'CR' || $property['ufCrm5OfferingType'] == 'CS' ? "Commercial Plot" : "Residential Plot",
         "SH" => "Shop",
         "SR" => "Show Room",
         "SA" => "Staff Accommodation"
@@ -475,16 +474,21 @@ function generateBayutXml($properties)
             $xml .= '<Rent_Frequency>Daily</Rent_Frequency>';
         }
 
-        if ($property['ufCrm5Furnished'] === 'furnished') {
+        if ($property['ufCrm5Furnished'] === 'furnished' || $property['ufCrm5Furnished'] === 'Yes') {
             $xml .= '<Furnished>Yes</Furnished>';
-        } elseif ($property['ufCrm5Furnished'] === 'unfurnished') {
+        } elseif ($property['ufCrm5Furnished'] === 'unfurnished' || $property['ufCrm5Furnished'] === 'No') {
             $xml .= '<Furnished>No</Furnished>';
-        } elseif ($property['ufCrm5Furnished'] === 'semi-furnished') {
+        } elseif ($property['ufCrm5Furnished'] === 'semi-furnished' || $property['ufCrm5Furnished'] === 'Partly') {
             $xml .= '<Furnished>Partly</Furnished>';
         }
 
         if (!empty($property['ufCrm5SaleType'])) {
             $xml .= '<offplanDetails_saleType><![CDATA[' . ($property['ufCrm5SaleType'] ?? '') . ']]></offplanDetails_saleType>';
+
+            if($property['ufCrm5SaleType'] === 'Resale') {
+                $xml .= '<offplanDetails_originalPrice><![CDATA[' . ($property['ufCrm5Price'] ?? '') . ']]></offplanDetails_originalPrice>';
+                $xml .= '<offplanDetails_amountPaid><![CDATA[' . ($property['ufCrm5Price'] ?? '') . ']]></offplanDetails_amountPaid>';
+            }
         }
 
         $xml .= '<City><![CDATA[' . ($property['ufCrm5BayutCity'] ?: $property['ufCrm5City'] ?? '') . ']]></City>';
