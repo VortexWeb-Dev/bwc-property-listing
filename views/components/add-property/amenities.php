@@ -4,9 +4,9 @@
     <div class="my-4 flex justify-between gap-6">
         <div class="w-full md:w-1/2 border rounded-lg p-4" style="max-height: 20rem; overflow-y: auto;">
             <label class="block text-sm font-medium mb-2">Available Amenities</label>
-            <ul id="availableAmenities" class="list-none p-0 space-y-2">
-                <!-- Available amenities will be displayed here -->
-            </ul>
+            <div id="availableAmenities" class="space-y-2">
+                <!-- Grouped amenities as accordions will be displayed here -->
+            </div>
         </div>
 
         <div class="w-full md:w-1/2 border rounded-lg p-4" style="max-height: 20rem; overflow-y: auto;">
@@ -21,259 +21,194 @@
 </div>
 
 <script>
-    const amenities = [{
-            id: 'GV',
-            label: 'Golf view'
-        },
-        {
-            id: 'CW',
-            label: 'City view'
-        },
-        {
-            id: 'NO',
-            label: 'North orientation'
-        },
-        {
-            id: 'SO',
-            label: 'South orientation'
-        },
-        {
-            id: 'EO',
-            label: 'East orientation'
-        },
-        {
-            id: 'WO',
-            label: 'West orientation'
-        },
-        {
-            id: 'NS',
-            label: 'Near school'
-        },
-        {
-            id: 'HO',
-            label: 'Near hospital'
-        },
-        {
-            id: 'TR',
-            label: 'Terrace'
-        },
-        {
-            id: 'NM',
-            label: 'Near mosque'
-        },
-        {
-            id: 'SM',
-            label: 'Near supermarket'
-        },
-        {
-            id: 'ML',
-            label: 'Near mall'
-        },
-        {
-            id: 'PT',
-            label: 'Near public transportation'
-        },
-        {
-            id: 'MO',
-            label: 'Near metro'
-        },
-        {
-            id: 'VT',
-            label: 'Near veterinary'
-        },
-        {
-            id: 'BC',
-            label: 'Beach access'
-        },
-        {
-            id: 'PK',
-            label: 'Public parks'
-        },
-        {
-            id: 'RT',
-            label: 'Near restaurants'
-        },
-        {
-            id: 'NG',
-            label: 'Near Golf'
-        },
-        {
-            id: 'AP',
-            label: 'Near airport'
-        },
-        {
-            id: 'CS',
-            label: 'Concierge Service'
-        },
-        {
-            id: 'SS',
-            label: 'Spa'
-        },
-        {
-            id: 'SY',
-            label: 'Shared Gym'
-        },
-        {
-            id: 'MS',
-            label: 'Maid Service'
-        },
-        {
-            id: 'WC',
-            label: 'Walk-in Closet'
-        },
-        {
-            id: 'HT',
-            label: 'Heating'
-        },
-        {
-            id: 'GF',
-            label: 'Ground floor'
-        },
-        {
-            id: 'SV',
-            label: 'Server room'
-        },
-        {
-            id: 'DN',
-            label: 'Pantry'
-        },
-        {
-            id: 'RA',
-            label: 'Reception area'
-        },
-        {
-            id: 'VP',
-            label: 'Visitors parking'
-        },
-        {
-            id: 'OP',
-            label: 'Office partitions'
-        },
-        {
-            id: 'SH',
-            label: 'Core and Shell'
-        },
-        {
-            id: 'CD',
-            label: 'Children daycare'
-        },
-        {
-            id: 'CL',
-            label: 'Cleaning services'
-        },
-        {
-            id: 'NH',
-            label: 'Near Hotel'
-        },
-        {
-            id: 'CR',
-            label: 'Conference room'
-        },
-        {
-            id: 'BL',
-            label: 'View of Landmark'
-        },
-        {
-            id: 'PR',
-            label: 'Children Play Area'
-        },
-        {
-            id: 'BH',
-            label: 'Beach Access'
-        }
-    ];
+    const groupedAmenities = {
+        "Residential Building Amenities": [{
+                id: "CS",
+                label: "24/7 Concierge"
+            },
+            {
+                id: "SE",
+                label: "24/7 Security"
+            },
+            {
+                id: "",
+                label: "Valet Parking"
+            },
+            {
+                id: "",
+                label: "Smart Home Automation Systems"
+            },
+            {
+                id: "",
+                label: "High-speed Elevators"
+            },
+            {
+                id: "AC",
+                label: "Centralized Air Conditioning"
+            },
+        ],
+        "Leisure & Wellness Amenities": [{
+                id: "PP",
+                label: "Infinity Pools / Sky Pools"
+            },
+            {
+                id: "PJ",
+                label: "Jacuzzi"
+            },
+            {
+                id: "SS",
+                label: "Spa Facilities"
+            },
+            {
+                id: "SA",
+                label: "Sauna"
+            },
+            {
+                id: "SR",
+                label: "Steam Rooms"
+            },
+            {
+                id: "PY",
+                label: "Fully Equipped Gyms / Fitness Centers"
+            },
+        ],
+        "Family & Community-Oriented Amenities": [{
+                id: "PR",
+                label: "Kids’ Play Areas"
+            },
+            {
+                id: "CD",
+                label: "Daycare Centers"
+            },
+            {
+                id: "BB",
+                label: "BBQ & Picnic Areas"
+            },
+        ],
+        "Outdoor & Recreational Amenities": [{
+                id: "PG",
+                label: "Landscaped Gardens"
+            },
+            {
+                id: "BC",
+                label: "Private Beach Access"
+            },
+        ],
+        "Security & Convenience": [{
+            id: "MT",
+            label: "Maintenance Services On-Demand"
+        }, ],
+        "Water Views": [{
+            id: "VW",
+            label: "Full Sea View"
+        }, ],
+        "City & Skyline Views": [{
+                id: "BL",
+                label: "Burj Khalifa View"
+            },
+            {
+                id: "CW",
+                label: "City View"
+            },
+        ],
+        "Palm & Island Views": [{
+            id: "BL",
+            label: "Palm Jumeirah View"
+        }, ],
+        "Green & Leisure Views": [{
+                id: "GV",
+                label: "Golf Course View"
+            },
+            {
+                id: "GR",
+                label: "Garden / Courtyard View"
+            },
+            {
+                id: "CV",
+                label: "Community View"
+            },
+        ]
+    };
 
     let selectedAmenities = [];
 
     function renderAmenities() {
-        const availableAmenitiesContainer = document.getElementById("availableAmenities");
-        availableAmenitiesContainer.innerHTML = "";
+        const container = document.getElementById("availableAmenities");
+        container.innerHTML = "";
 
-        amenities.forEach(amenity => {
-            const li = document.createElement("li");
-            li.classList.add("text-gray-700", "p-2", "flex", "justify-between", "items-center", "mb-2", "bg-gray-100", "rounded-md", "cursor-pointer", "hover:bg-gray-200");
-            li.textContent = amenity.label;
-            li.dataset.id = amenity.id;
+        for (const group in groupedAmenities) {
+            const groupDiv = document.createElement("div");
+            groupDiv.classList.add("mb-2");
 
-            li.onclick = () => selectAmenity(amenity);
+            const header = document.createElement("div");
+            header.classList.add("text-xl", "font-semibold", "cursor-pointer", "p-2", "bg-gray-200", "rounded");
+            header.textContent = group;
+            header.onclick = () => toggleAccordion(header);
 
-            availableAmenitiesContainer.appendChild(li);
-        });
+            const list = document.createElement("ul");
+            list.classList.add("pl-4", "hidden");
+
+            groupedAmenities[group].forEach(amenity => {
+                const li = document.createElement("li");
+                li.classList.add("text-gray-700", "p-1");
+
+                li.innerHTML = `
+                    <input type="checkbox" id="${amenity.id}" onclick="toggleAmenity('${amenity.id}', '${amenity.label}')" />
+                    <label for="${amenity.id}" class="ml-2">${amenity.label}</label>
+                `;
+
+                list.appendChild(li);
+            });
+
+            groupDiv.appendChild(header);
+            groupDiv.appendChild(list);
+            container.appendChild(groupDiv);
+        }
     }
 
-    function selectAmenity(amenity) {
-        if (selectedAmenities.some(a => a.id === amenity.id)) {
-            alert("Amenity is already selected.");
-            return;
+    function toggleAccordion(header) {
+        const nextSibling = header.nextElementSibling;
+        nextSibling.classList.toggle("hidden");
+    }
+
+    function toggleAmenity(id, label) {
+        const isChecked = document.getElementById(id).checked;
+
+        if (isChecked) {
+            selectedAmenities.push({
+                id,
+                label
+            });
+        } else {
+            selectedAmenities = selectedAmenities.filter(a => a.id !== id);
         }
 
-        selectedAmenities.push(amenity);
         updateSelectedAmenities();
-        updateAvailableAmenities();
         updateAmenitiesInput();
     }
 
     function updateSelectedAmenities() {
-        const selectedAmenitiesContainer = document.getElementById("selectedAmenities");
-        selectedAmenitiesContainer.innerHTML = "";
+        const container = document.getElementById("selectedAmenities");
+        container.innerHTML = "";
 
         selectedAmenities.forEach(amenity => {
             const li = document.createElement("li");
-            li.classList.add("text-gray-700", "p-2", "flex", "justify-between", "items-center", "mb-2", "bg-gray-100", "rounded-md");
+            li.classList.add("text-gray-700", "p-2", "bg-gray-100", "rounded-md", "flex", "justify-between", "items-center");
+            li.textContent = amenity.label;
 
-            li.innerHTML = `
-                ${amenity.label}
-                <button type="button" class="text-red-500 hover:text-red-700" onclick="removeAmenity('${amenity.id}')">×</button>
-            `;
+            const removeBtn = document.createElement("button");
+            removeBtn.classList.add("text-red-500", "hover:text-red-700");
+            removeBtn.textContent = "×";
+            removeBtn.onclick = () => toggleAmenity(amenity.id, amenity.label);
 
-            selectedAmenitiesContainer.appendChild(li);
+            li.appendChild(removeBtn);
+            container.appendChild(li);
         });
     }
-
-    function updateAvailableAmenities() {
-        const availableAmenitiesContainer = document.getElementById("availableAmenities");
-        availableAmenitiesContainer.innerHTML = "";
-
-        amenities.forEach(amenity => {
-            if (!selectedAmenities.some(a => a.id === amenity.id)) {
-                const li = document.createElement("li");
-                li.classList.add("text-gray-700", "p-2", "flex", "justify-between", "items-center", "mb-2", "bg-gray-100", "rounded-md", "cursor-pointer", "hover:bg-gray-200");
-                li.textContent = amenity.label;
-                li.dataset.id = amenity.id;
-
-                li.onclick = () => selectAmenity(amenity);
-
-                availableAmenitiesContainer.appendChild(li);
-            }
-        });
-    }
-
-    function removeAmenity(amenityId) {
-        selectedAmenities = selectedAmenities.filter(a => a.id !== amenityId);
-
-        const amenitiesList = document.getElementById("selectedAmenities");
-        const itemToRemove = Array.from(amenitiesList.children).find(li =>
-            li.textContent.trim().includes(getAmenityName(amenityId))
-        );
-
-        if (itemToRemove) {
-            itemToRemove.remove();
-        }
-
-        updateAmenitiesInput();
-    }
-
 
     function updateAmenitiesInput() {
-        let selectedAmenities = [];
-        const amenitiesList = document.getElementById("selectedAmenities").children;
-
-        for (let i = 0; i < amenitiesList.length; i++) {
-            selectedAmenities.push(getAmenityId(amenitiesList[i].textContent.trim().replace("×", "").trim()));
-        }
-
-        document.getElementById("amenitiesInput").value = JSON.stringify(selectedAmenities);
-
+        const selectedIds = selectedAmenities.map(a => a.id).filter(id => id);
+        document.getElementById("amenitiesInput").value = JSON.stringify(selectedIds);
     }
 
     renderAmenities();
