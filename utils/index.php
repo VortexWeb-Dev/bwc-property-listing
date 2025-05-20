@@ -195,7 +195,9 @@ function getFullAmenityName($shortCode)
         'CR' => 'Conference room',
         'BL' => 'View of Landmark',
         'PR' => 'Children Play Area',
-        'BH' => 'Beach Access'
+        'BH' => 'Beach Access',
+        'CO' => 'Children Pool',
+        'SP' => 'Shared Pool',
     ];
 
     return $amenityMap[$shortCode] ?? $shortCode;

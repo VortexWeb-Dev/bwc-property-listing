@@ -47,7 +47,16 @@
                 label: "Centralized Air Conditioning"
             },
         ],
-        "Leisure & Wellness Amenities": [{
+        "Leisure & Wellness Amenities": [
+            {
+                id: "SP",
+                label: "Swimming Pools (Shared)"
+            },
+            {
+                id: "CO",
+                label: "Children's Pools"
+            },
+            {
                 id: "PP",
                 label: "Infinity Pools / Sky Pools"
             },
