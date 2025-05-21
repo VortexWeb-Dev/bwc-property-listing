@@ -61,6 +61,14 @@
             document.querySelector('label[for="rental_period"]').innerHTML = 'Rental Period (if rental)';
         }
 
+        if (offeringType == 'RS' || offeringType == 'RR') {
+            document.getElementById("bedrooms").setAttribute("required", true);
+            document.querySelector('label[for="bedrooms"]').innerHTML = 'No. of Bedrooms <span class="text-danger">*</span>';
+        } else {
+            document.getElementById("bedrooms").removeAttribute("required");
+            document.querySelector('label[for="bedrooms"]').innerHTML = 'No. of Bedrooms';
+        }
+
         const newReference = await getNewReference(offeringType);
         document.getElementById("reference").value = newReference;
     })
