@@ -113,7 +113,7 @@
 
         const fields = {
             "title": data.title_deed,
-            "ufCrm5ReferenceNumber": data.reference,
+            "ufCrm5ReferenceNumber": await getNewReference(data.offering_type),
             "ufCrm5OfferingType": data.offering_type,
             "ufCrm5PropertyType": data.property_type,
             "ufCrm5Price": data.price,
