@@ -62,7 +62,7 @@ if ($isAdmin) {
         const baseUrl = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r';
         const entityTypeId = 1036;
         const fields = [
-            'id', 'ufCrm5ReferenceNumber', 'ufCrm5OfferingType', 'ufCrm5PropertyType', 'ufCrm5Price', 'ufCrm5TitleEn', 'ufCrm5DescriptionEn', 'ufCrm5Size', 'ufCrm5Bedroom', 'ufCrm5Bathroom', 'ufCrm5PhotoLinks', 'ufCrm5AgentName', 'ufCrm5City', 'ufCrm5Community', 'ufCrm5SubCommunity', 'ufCrm5Tower', 'ufCrm5PfEnable', 'ufCrm5BayutEnable', 'ufCrm5DubizzleEnable', 'ufCrm5WebsiteEnable', 'ufCrm5ListingOwner', 'ufCrm5Status', 'ufCrm5RentalPeriod', 'createdTime'
+            'id', 'ufCrm5ReferenceNumber', 'ufCrm5OfferingType', 'ufCrm5PropertyType', 'ufCrm5Price', 'ufCrm5TitleEn', 'ufCrm5DescriptionEn', 'ufCrm5Size', 'ufCrm5Bedroom', 'ufCrm5Bathroom', 'ufCrm5PhotoLinks', 'ufCrm5AgentName', 'ufCrm5BayutCity', 'ufCrm5BayutCommunity', 'ufCrm5BayutSubCommunity', 'ufCrm5BayutTower', 'ufCrm5PfEnable', 'ufCrm5BayutEnable', 'ufCrm5DubizzleEnable', 'ufCrm5WebsiteEnable', 'ufCrm5ListingOwner', 'ufCrm5Status', 'ufCrm5RentalPeriod', 'createdTime'
         ];
         const orderBy = {
             id: 'desc'
@@ -212,16 +212,16 @@ if ($isAdmin) {
                     <td class="px-3 py-4 whitespace-nowrap text-xs font-medium text-gray-800">
                         <p>
                             ${[
-                                property.ufCrm5City,
-                                property.ufCrm5Community,
+                                property.ufCrm5BayutCity,
+                                property.ufCrm5BayutCommunity,
                             ]
                             .filter(Boolean)
                             .join(' - ') || ''}
                         </p>
                         <p>
                             ${[
-                                property.ufCrm5SubCommunity,
-                                property.ufCrm5Tower
+                                property.ufCrm5BayutSubCommunity,
+                                property.ufCrm5BayutTower
                             ]
                             .filter(Boolean)
                             .join(' - ') || ''}
