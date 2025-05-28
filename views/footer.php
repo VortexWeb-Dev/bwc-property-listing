@@ -216,80 +216,80 @@
                             const property = propertyData.result.item;
                             console.log('Property data for deletion:', property);
 
-                            // Delete images from S3
-                            if (property.ufCrm5PhotoLinks && Array.isArray(property.ufCrm5PhotoLinks)) {
-                                console.log('Found photo links:', property.ufCrm5PhotoLinks);
-                                for (const imageUrl of property.ufCrm5PhotoLinks) {
-                                    try {
-                                        console.log('Attempting to delete image:', imageUrl);
-                                        const response = await fetch('./delete-s3-object.php', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                            },
-                                            body: JSON.stringify({
-                                                fileUrl: imageUrl
-                                            })
-                                        });
-                                        const result = await response.json();
-                                        console.log('Delete response:', result);
-                                        if (!result.success) {
-                                            console.error(`Failed to delete image: ${result.error}`);
-                                        }
-                                    } catch (error) {
-                                        console.error(`Error deleting S3 object: ${imageUrl}`, error);
-                                    }
-                                }
-                            }
+                            // // Delete images from S3
+                            // if (property.ufCrm5PhotoLinks && Array.isArray(property.ufCrm5PhotoLinks)) {
+                            //     console.log('Found photo links:', property.ufCrm5PhotoLinks);
+                            //     for (const imageUrl of property.ufCrm5PhotoLinks) {
+                            //         try {
+                            //             console.log('Attempting to delete image:', imageUrl);
+                            //             const response = await fetch('./delete-s3-object.php', {
+                            //                 method: 'POST',
+                            //                 headers: {
+                            //                     'Content-Type': 'application/json',
+                            //                 },
+                            //                 body: JSON.stringify({
+                            //                     fileUrl: imageUrl
+                            //                 })
+                            //             });
+                            //             const result = await response.json();
+                            //             console.log('Delete response:', result);
+                            //             if (!result.success) {
+                            //                 console.error(`Failed to delete image: ${result.error}`);
+                            //             }
+                            //         } catch (error) {
+                            //             console.error(`Error deleting S3 object: ${imageUrl}`, error);
+                            //         }
+                            //     }
+                            // }
 
-                            // Delete floorplan from S3 if exists
-                            if (property.ufCrm5FloorPlan) {
-                                try {
-                                    console.log('Attempting to delete floorplan:', property.ufCrm5FloorPlan);
-                                    const response = await fetch('./delete-s3-object.php', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify({
-                                            fileUrl: property.ufCrm5FloorPlan
-                                        })
-                                    });
-                                    const result = await response.json();
-                                    console.log('Floorplan delete response:', result);
-                                    if (!result.success) {
-                                        console.error(`Failed to delete floorplan: ${result.error}`);
-                                    }
-                                } catch (error) {
-                                    console.error(`Error deleting S3 floorplan: ${property.ufCrm5FloorPlan}`, error);
-                                }
-                            }
+                            // // Delete floorplan from S3 if exists
+                            // if (property.ufCrm5FloorPlan) {
+                            //     try {
+                            //         console.log('Attempting to delete floorplan:', property.ufCrm5FloorPlan);
+                            //         const response = await fetch('./delete-s3-object.php', {
+                            //             method: 'POST',
+                            //             headers: {
+                            //                 'Content-Type': 'application/json',
+                            //             },
+                            //             body: JSON.stringify({
+                            //                 fileUrl: property.ufCrm5FloorPlan
+                            //             })
+                            //         });
+                            //         const result = await response.json();
+                            //         console.log('Floorplan delete response:', result);
+                            //         if (!result.success) {
+                            //             console.error(`Failed to delete floorplan: ${result.error}`);
+                            //         }
+                            //     } catch (error) {
+                            //         console.error(`Error deleting S3 floorplan: ${property.ufCrm5FloorPlan}`, error);
+                            //     }
+                            // }
 
-                            // Delete documents from S3
-                            if (property.ufCrm5Documents && Array.isArray(property.ufCrm5Documents)) {
-                                console.log('Found documents:', property.ufCrm5Documents);
-                                for (const docUrl of property.ufCrm5Documents) {
-                                    try {
-                                        console.log('Attempting to delete document:', docUrl);
-                                        const response = await fetch('./delete-s3-object.php', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                            },
-                                            body: JSON.stringify({
-                                                fileUrl: docUrl
-                                            })
-                                        });
-                                        const result = await response.json();
-                                        console.log('Delete response:', result);
-                                        if (!result.success) {
-                                            console.error(`Failed to delete document: ${result.error}`);
-                                        }
-                                    } catch (error) {
-                                        console.error(`Error deleting S3 document: ${docUrl}`, error);
-                                    }
-                                }
-                            }
+                            // // Delete documents from S3
+                            // if (property.ufCrm5Documents && Array.isArray(property.ufCrm5Documents)) {
+                            //     console.log('Found documents:', property.ufCrm5Documents);
+                            //     for (const docUrl of property.ufCrm5Documents) {
+                            //         try {
+                            //             console.log('Attempting to delete document:', docUrl);
+                            //             const response = await fetch('./delete-s3-object.php', {
+                            //                 method: 'POST',
+                            //                 headers: {
+                            //                     'Content-Type': 'application/json',
+                            //                 },
+                            //                 body: JSON.stringify({
+                            //                     fileUrl: docUrl
+                            //                 })
+                            //             });
+                            //             const result = await response.json();
+                            //             console.log('Delete response:', result);
+                            //             if (!result.success) {
+                            //                 console.error(`Failed to delete document: ${result.error}`);
+                            //             }
+                            //         } catch (error) {
+                            //             console.error(`Error deleting S3 document: ${docUrl}`, error);
+                            //         }
+                            //     }
+                            // }
                         }
 
                         // Now delete the property from CRM
@@ -357,60 +357,60 @@
                             if (propertyData.result && propertyData.result.item && !propertyData.result.item.ufCrm5TitleEn.includes('(Duplicate)')) {
                                 const property = propertyData.result.item;
 
-                                // Delete images from S3
-                                if (property.ufCrm5PhotoLinks && Array.isArray(property.ufCrm5PhotoLinks)) {
-                                    for (const imageUrl of property.ufCrm5PhotoLinks) {
-                                        try {
-                                            await fetch('./delete-s3-object.php', {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type': 'application/json',
-                                                },
-                                                body: JSON.stringify({
-                                                    fileUrl: imageUrl
-                                                })
-                                            });
-                                        } catch (error) {
-                                            console.error(`Error deleting S3 object: ${imageUrl}`, error);
-                                        }
-                                    }
-                                }
+                                // // Delete images from S3
+                                // if (property.ufCrm5PhotoLinks && Array.isArray(property.ufCrm5PhotoLinks)) {
+                                //     for (const imageUrl of property.ufCrm5PhotoLinks) {
+                                //         try {
+                                //             await fetch('./delete-s3-object.php', {
+                                //                 method: 'POST',
+                                //                 headers: {
+                                //                     'Content-Type': 'application/json',
+                                //                 },
+                                //                 body: JSON.stringify({
+                                //                     fileUrl: imageUrl
+                                //                 })
+                                //             });
+                                //         } catch (error) {
+                                //             console.error(`Error deleting S3 object: ${imageUrl}`, error);
+                                //         }
+                                //     }
+                                // }
 
-                                // Delete floorplan from S3 if exists
-                                if (property.ufCrm5FloorPlan) {
-                                    try {
-                                        await fetch('./delete-s3-object.php', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                            },
-                                            body: JSON.stringify({
-                                                fileUrl: property.ufCrm5FloorPlan
-                                            })
-                                        });
-                                    } catch (error) {
-                                        console.error(`Error deleting S3 floorplan: ${property.ufCrm5FloorPlan}`, error);
-                                    }
-                                }
+                                // // Delete floorplan from S3 if exists
+                                // if (property.ufCrm5FloorPlan) {
+                                //     try {
+                                //         await fetch('./delete-s3-object.php', {
+                                //             method: 'POST',
+                                //             headers: {
+                                //                 'Content-Type': 'application/json',
+                                //             },
+                                //             body: JSON.stringify({
+                                //                 fileUrl: property.ufCrm5FloorPlan
+                                //             })
+                                //         });
+                                //     } catch (error) {
+                                //         console.error(`Error deleting S3 floorplan: ${property.ufCrm5FloorPlan}`, error);
+                                //     }
+                                // }
 
-                                // Delete documents from S3
-                                if (property.ufCrm5Documents && Array.isArray(property.ufCrm5Documents)) {
-                                    for (const docUrl of property.ufCrm5Documents) {
-                                        try {
-                                            await fetch('./delete-s3-object.php', {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type': 'application/json',
-                                                },
-                                                body: JSON.stringify({
-                                                    fileUrl: docUrl
-                                                })
-                                            });
-                                        } catch (error) {
-                                            console.error(`Error deleting S3 document: ${docUrl}`, error);
-                                        }
-                                    }
-                                }
+                                // // Delete documents from S3
+                                // if (property.ufCrm5Documents && Array.isArray(property.ufCrm5Documents)) {
+                                //     for (const docUrl of property.ufCrm5Documents) {
+                                //         try {
+                                //             await fetch('./delete-s3-object.php', {
+                                //                 method: 'POST',
+                                //                 headers: {
+                                //                     'Content-Type': 'application/json',
+                                //                 },
+                                //                 body: JSON.stringify({
+                                //                     fileUrl: docUrl
+                                //                 })
+                                //             });
+                                //         } catch (error) {
+                                //             console.error(`Error deleting S3 document: ${docUrl}`, error);
+                                //         }
+                                //     }
+                                // }
                             }
                         } catch (error) {
                             console.error(`Error getting property details for deletion: ${propertyId}`, error);
