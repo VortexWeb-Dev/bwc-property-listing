@@ -1239,7 +1239,7 @@
 
     async function getNewReference(offeringType) {
         const prefix = (offeringType === "RR" || offeringType === "CR") ? "BWC-R-" : "BWC-S-";
-        const url = 'https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1036&order[id]=desc&select[]=ufCrm5ReferenceNumber';
+        const url = `https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1036&order[id]=desc&select[]=ufCrm5ReferenceNumber`;
 
         try {
             const response = await fetch(url);
@@ -1263,8 +1263,30 @@
                 return max;
             }, 0);
 
-            const nextNumber = String(highestNumber + 1).padStart(3, '0');
-            return `${prefix}${nextNumber}`;
+            let nextNumber = String(highestNumber + 1).padStart(3, '0');
+            let newReference = `${prefix}${nextNumber}`;
+
+            // Check if the reference already exists using API call
+            const checkUrl = `https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1036&filter[ufCrm5ReferenceNumber]=${newReference}&select[]=ufCrm5ReferenceNumber`;
+
+            const checkResponse = await fetch(checkUrl);
+            const checkData = await checkResponse.json();
+
+            // If the reference exists, increment and check again
+            while (checkData.result.items.length > 0) {
+                nextNumber = String(parseInt(nextNumber, 10) + 1).padStart(3, '0');
+                newReference = `${prefix}${nextNumber}`;
+
+                // Make the check API call again with the new reference
+                const retryCheckResponse = await fetch(`https://b24-oy9apg.bitrix24.com/rest/9/e3hbkx5cs7wy7r7r/crm.item.list?entityTypeId=1036&filter[ufCrm5ReferenceNumber]=${newReference}&select[]=ufCrm5ReferenceNumber`);
+                const retryCheckData = await retryCheckResponse.json();
+
+                if (retryCheckData.result.items.length === 0) {
+                    break;
+                }
+            }
+
+            return newReference;
         } catch (error) {
             console.error('Error fetching reference:', error);
             return null;
